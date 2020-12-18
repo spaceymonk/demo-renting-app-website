@@ -1,0 +1,67 @@
+<form action="/my-profile" id="signup-form">
+
+    <!-- email -->
+    <div class="field">
+        <div class="control">
+            <input class="input is-medium is-rounded has-background-white-ter" type="email"
+                placeholder="hello@example.com" autocomplete="current-email" required name="email" />
+        </div>
+    </div>
+
+    <!-- password -->
+    <div class="field">
+        <div class="control">
+            <input class="input is-medium is-rounded  has-background-white-ter" type="password" placeholder="**********"
+                autocomplete="current-password" required name="password" />
+        </div>
+    </div>
+
+    <!-- name -->
+    <div class="field">
+        <div class="columns is-variable is-1">
+            <div class="column control">
+                <input class="input is-medium is-rounded  has-background-white-ter" type="text" placeholder="First name"
+                    autocomplete="current-name" required name="first_name" />
+            </div>
+            <div class="column control">
+                <input class="input is-medium is-rounded  has-background-white-ter" type="text" placeholder="Last name"
+                    autocomplete="current-name" required name="last_name" />
+            </div>
+        </div>
+    </div>
+
+    <!-- bdate -->
+    <div class="field">
+        <div class="control">
+            <input class="input is-medium is-rounded  has-background-white-ter" type="text" onfocus="(this.type='date')"
+                onblur="(this.type='text')" placeholder="Birthday Date" autocomplete="" required name="bdate" />
+        </div>
+    </div>
+
+    <!-- sex -->
+    <div class="field">
+        <div class="control">
+            <div class="select is-fullwidth is-medium is-rounded">
+                <select name="sex" class="has-background-white-ter">
+                    <option value="M">Male</option>
+                    <option value="F">Female</option>
+                    <option value="O">Other</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- address -->
+    <div class="field">
+        <div class="control">
+            <textarea class="textarea is-rounded  has-background-white-ter is-medium" placeholder="Address" required
+                name="addr"></textarea>
+        </div>
+    </div>
+
+
+    <br />
+    <button class="button is-block is-fullwidth is-primary is-medium is-rounded" type="submit">
+        Save
+    </button>
+</form>

@@ -1,0 +1,117 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<section class="container box p-0 hero is-dark mb-5" >
+
+    <div class="hero-body">
+        <div class="ml-5 container">
+            <h1 class="title">
+                My Profile
+            </h1>
+            <h2 class="subtitle">
+                {% if admin %}
+                Admin Panel
+                {% endif %}
+            </h2>
+        </div>
+    </div>
+
+    {% if admin %}
+    <div class="pb-5" style="width: 90%; margin: auto;">
+        <div class="table-container">
+            <table class="table is-hoverable is-fullwidth is-striped is-scrollable">
+                <thead>
+                    <tr class="has-background-primary has-text-white">
+                        <th>Email</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th class="has-text-right">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for user in users %}
+                    <tr>
+                        <td>{{user.email}}</td>
+                        <td>{{user.name}}</td>
+                        {% if user.is_banned %}
+                        <td><span>&#10004;</span> Banned</td>
+                        <td class="has-text-right">
+                            <a href="/my-profile?remove_ban={{user.email}}" class="button is-success">Remove ban</a>
+                        </td>
+                        {% else %}
+                        <td><span>&#10007;</span> Not banned</td>
+                        <td class="has-text-right">
+                            <a href="/my-profile?ban={{user.email}}" class="button is-danger">Ban user</a>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="pb-5">
+        <div class="tabs is-boxed is-centered main-menu" id="nav">
+            <ul>
+                <li data-target="pane-1" id="1" class="is-active">
+                    <a> <span>Settings</span> </a>
+                </li>
+                <li data-target="pane-2" id="2">
+                    <a> <span>Products</span> </a>
+                </li>
+                <li data-target="pane-3" id="3">
+                    <a> <span>Orders</span> </a>
+                </li>
+            </ul>
+        </div>
+        <div class="tab-content" style="min-height: 90vh;">
+            <div class="tab-pane" id="pane-1">
+                <div class="container">{% include 'settings.html' %}</div>
+            </div>
+            <div class="tab-pane" id="pane-2">
+                <div class="container">{% include 'products.html' %}</div>
+            </div>
+            <div class="tab-pane" id="pane-3">
+                <div class="container">{% include 'orders.html' %}</div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+
+</section>
+
+<script>
+    document.querySelectorAll("#nav li").forEach(function (navEl) {
+        navEl.onclick = function () { toggleTab(this.id, this.dataset.target); }
+    });
+
+    function toggleTab(selectedNav, targetId) {
+        var navEls = document.querySelectorAll("#nav li");
+
+        navEls.forEach(function (navEl) {
+            if (navEl.id == selectedNav) {
+                navEl.classList.add("is-active");
+            } else {
+                if (navEl.classList.contains("is-active")) {
+                    navEl.classList.remove("is-active");
+                }
+            }
+        });
+
+        var tabs = document.querySelectorAll(".tab-pane");
+
+        tabs.forEach(function (tab) {
+            if (tab.id == targetId) {
+                tab.style.display = "block";
+            } else {
+                tab.style.display = "none";
+            }
+        });
+    }
+</script>
+
+{% endblock %}

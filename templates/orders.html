@@ -1,0 +1,27 @@
+<!-- display products -->
+<div class="table-container">
+    <table class="table is-hoverable is-fullwidth is-striped is-scrollable">
+        <thead>
+            <tr class="has-background-primary has-text-white">
+                <th>Order Id</th>
+                <th>Customer</th>
+                <th>Product Id</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {% for product in products %}
+            <tr class="launchModal" onclick="selectedProduct={{ product.id }}" style="cursor: pointer;">
+                <td>{{product.title}}</td>
+                <td>{{product.description}}</td>
+                <td>$&nbsp;{{product.price}}</td>
+                <td>{{product.dates.begin}}&nbsp;-&nbsp;{{product.dates.end}}</td>
+                <td>{{product.rating}}</td>
+            </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+
+</div>

@@ -1,13 +1,20 @@
 from flask import Flask, render_template, request, redirect
 
 # todo: create sessions for each ip
-logged = False
+logged = True
 app = Flask(__name__)
 
 
 @app.route('/my-profile')
 def my_profile_page():
-    return render_template('my-profile.html', logged=True)
+    # check for banning in admin
+    return render_template('my-profile.html', logged=logged, admin=False, users=[
+        {'email': 'asd@asd.com', 'name': "James jcoan", 'is_banned': False},
+        {'email': 'asd@asd.com', 'name': "James jcoan", 'is_banned': False},
+        {'email': 'asd@asd.com', 'name': "James jcoan", 'is_banned': True},
+        {'email': 'asd@asd.com', 'name': "James jcoan", 'is_banned': False},
+        {'email': 'asd@asd.com', 'name': "James jcoan", 'is_banned': False}
+    ],)
 
 
 @app.route('/login')
@@ -51,7 +58,7 @@ def signup_page():
 @app.route('/rent-item')
 def rent_item_page():
     product_id = request.args.get('productId')
-    return render_template('rent-item.html', product_id=product_id, isValid=False, order_id=123123, logged=logged)
+    return render_template('rent-item.html', product_id=product_id, isValid=False, order_id=123123, logged=logged, reason='cunku sucuk')
 
 
 @app.route('/')
@@ -60,20 +67,37 @@ def home_page():
                            logged=logged,
                            total_item=162703,
                            products=[
-                               [123456, 'car', 'tih is a nice car', 233,
-                                   '12.12.2020', '12.15.2020', 4/5],
-                               [123456, 'car', 'tih is a nice car', 233,
-                                   '12.12.2020', '12.15.2020', 4/5],
-                               [123456, 'car', 'tih is a nice car', 233,
-                                   '12.12.2020', '12.15.2020', 4/5],
-                               [123456, 'car', 'tih is a nice car', 233,
-                                   '12.12.2020', '12.15.2020', 4/5],
-                               [123456, 'car', 'tih is a nice car', 233,
-                                   '12.12.2020', '12.15.2020', 4/5],
-                               [123456, 'car', 'tih is a nice car', 233,
-                                   '12.12.2020', '12.15.2020', 4/5],
-                               [123456, 'car', 'tih is a nice car', 233,
-                                   '12.12.2020', '12.15.2020', 4/5]])
+                               {
+                                   'title': 'el carrot',
+                                   'description': 'this is naica',
+                                   'price': 123,
+                                   'dates': {
+                                       'begin': '12-12-2020',
+                                       'end': '21-12-2020'
+                                   },
+                                   'rating': '4/5'
+                               },
+                               {
+                                   'title': 'el carrot',
+                                   'description': 'this is naica',
+                                   'price': 123,
+                                   'dates': {
+                                       'begin': '12-12-2020',
+                                       'end': '21-12-2020'
+                                   },
+                                   'rating': '4/5'
+                               },
+                               {
+                                   'title': 'el carrot',
+                                   'description': 'this is naica',
+                                   'price': 123,
+                                   'dates': {
+                                       'begin': '12-12-2020',
+                                       'end': '21-12-2020'
+                                   },
+                                   'rating': '4/5'
+                               }
+                           ])
 
 
 if __name__ == '__main__':
