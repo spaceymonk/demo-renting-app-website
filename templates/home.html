@@ -1,0 +1,204 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<section class="container px-5 mt-6" style="min-height: 100vh;">
+
+    <div class="box has-background-dark p-5">
+
+        <div class="columns">
+            <div class="column">
+                <h1 class="title has-text-white">{{total_item}} item(s) listing:</h1>
+            </div>
+            <div class="column" style="text-align: end;">
+                <div class="button is-primary ml-3 is-outlined is-rounded" id="filter-button">
+                    <span><svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                            <path fill="currentColor"
+                                d="M15,19.88C15.04,20.18 14.94,20.5 14.71,20.71C14.32,21.1 13.69,21.1 13.3,20.71L9.29,16.7C9.06,16.47 8.96,16.16 9,15.87V10.75L4.21,4.62C3.87,4.19 3.95,3.56 4.38,3.22C4.57,3.08 4.78,3 5,3V3H19V3C19.22,3 19.43,3.08 19.62,3.22C20.05,3.56 20.13,4.19 19.79,4.62L15,10.75V19.88M7.04,5L11,10.06V15.58L13,17.58V10.05L16.96,5H7.04Z" />
+                        </svg></span>
+                    <span>Filter</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="is-flex is-justify-content-space-between">
+            <h1 class="title has-text-white">{{total_item}} item(s) listing:</h1>
+            <div class="button is-primary ml-3 is-outlined is-rounded" id="filter-button">
+                <span><svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                        <path fill="currentColor"
+                            d="M15,19.88C15.04,20.18 14.94,20.5 14.71,20.71C14.32,21.1 13.69,21.1 13.3,20.71L9.29,16.7C9.06,16.47 8.96,16.16 9,15.87V10.75L4.21,4.62C3.87,4.19 3.95,3.56 4.38,3.22C4.57,3.08 4.78,3 5,3V3H19V3C19.22,3 19.43,3.08 19.62,3.22C20.05,3.56 20.13,4.19 19.79,4.62L15,10.75V19.88M7.04,5L11,10.06V15.58L13,17.58V10.05L16.96,5H7.04Z" />
+                    </svg></span>
+                <span>Filter</span>
+            </div>
+        </div> -->
+
+
+        <!-- show this form when pressed filter button -->
+        <div class="container">
+            <form action="#" class="box has-background-grey-dark is-hidden" id="filter-form">
+
+                <div class="columns is-desktop">
+
+                    <!-- select price margin -->
+                    <div class="column field">
+                        <div class="columns box has-background-grey  m-0 p-0">
+                            <div class="column">
+                                <label class="label has-text-white">Minimum&nbsp;price:</label>
+                                <div class="field">
+                                    <div class="control has-icons-left">
+                                        <input class="input is-rounded has-background-grey-dark has-text-white"
+                                            type="number" min="0" value="0" name="min-price" id="min-price">
+                                        <span class="icon is-left">
+                                            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                                                <path fill="white"
+                                                    d="M7,15H9C9,16.08 10.37,17 12,17C13.63,17 15,16.08 15,15C15,13.9 13.96,13.5 11.76,12.97C9.64,12.44 7,11.78 7,9C7,7.21 8.47,5.69 10.5,5.18V3H13.5V5.18C15.53,5.69 17,7.21 17,9H15C15,7.92 13.63,7 12,7C10.37,7 9,7.92 9,9C9,10.1 10.04,10.5 12.24,11.03C14.36,11.56 17,12.22 17,15C17,16.79 15.53,18.31 13.5,18.82V21H10.5V18.82C8.47,18.31 7,16.79 7,15Z" />
+                                            </svg>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <label class="label has-text-white">Maximum&nbsp;price:</label>
+                                <div class="field">
+                                    <div class="control has-icons-left">
+                                        <input class="input is-rounded has-background-grey-dark has-text-white"
+                                            type="number" min="0" value="0" name="max-price" id="max-price">
+                                        <span class="icon is-left">
+                                            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                                                <path fill="white"
+                                                    d="M7,15H9C9,16.08 10.37,17 12,17C13.63,17 15,16.08 15,15C15,13.9 13.96,13.5 11.76,12.97C9.64,12.44 7,11.78 7,9C7,7.21 8.47,5.69 10.5,5.18V3H13.5V5.18C15.53,5.69 17,7.21 17,9H15C15,7.92 13.63,7 12,7C10.37,7 9,7.92 9,9C9,10.1 10.04,10.5 12.24,11.03C14.36,11.56 17,12.22 17,15C17,16.79 15.53,18.31 13.5,18.82V21H10.5V18.82C8.47,18.31 7,16.79 7,15Z" />
+                                            </svg>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- select dates  -->
+                    <div class="column field">
+                        <div class="columns  box has-background-grey  m-0 p-0">
+                            <div class="column">
+                                <label class="label has-text-white">Available&nbsp;from:</label>
+                                <input class="input is-rounded has-background-grey-dark has-text-white" type="date"
+                                    name="datepick-begin" id="datepick-begin">
+                            </div>
+                            <div class="column">
+                                <label class="label has-text-white">Available&nbsp;to:</label>
+                                <input class="input is-rounded has-background-grey-dark has-text-white" type="date"
+                                    name="datepick-end" id="datepick-end">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- select category -->
+                    <div class="column field">
+                        <div class="columns box has-background-grey  m-0 p-0">
+                            <div class="column">
+                                <label class="label has-text-white">Category:</label>
+                                <div class="select has-background-grey-dark is-fullwidth">
+                                    <select class="has-background-grey-dark has-text-white" name="category"
+                                        id="category">
+                                        <option>All</option>
+                                        <option>Furniture</option>
+                                        <option>Car & Motorcycle</option>
+                                        <option>Camping</option>
+                                        <option>Clothing</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="is-flex is-mobile is-justify-content-center">
+                    <div class="mx-2">
+                        <button class="button is-link" type="reset" id="clearBtn">Clear</button>
+                    </div>
+                    <div class="mx-2">
+                        <button class=" button is-success" type="submit">Submit</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- display products -->
+        <div class="table-container">
+            <table class="table is-hoverable is-fullwidth is-striped is-scrollable">
+                <thead>
+                    <tr class="has-background-primary has-text-white">
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Date Interval</th>
+                        <th>Merchant Rating</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for product in products %}
+                    <tr class="launchModal" onclick="selectedProduct={{ product[0] }}" style="cursor: pointer;">
+                        <td>{{product[1]}}</td>
+                        <td>{{product[2]}}</td>
+                        <td>$&nbsp;{{product[3]}}</td>
+                        <td>{{product[4][0]}}&nbsp;-&nbsp;{{product[4][1]}}</td>
+                        <td>{{product[5]}}</td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+</section>
+
+<div id="modal" class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <div class="box">
+            <article class="media">
+                <div class="media-left"></div>
+                <div class="media-content">
+                    <div class="content">
+                        <p>
+                            Do you want to rent this product?
+                        </p>
+                    </div>
+                    <div class="is-flex is-justify-content-flex-end">
+                        <button class="button is-success is-small" id="rentBtn">Rent</button>
+                        <button class="button is-danger is-small ml-3" id="closebtn">Cancel</button>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+</div>
+
+<script>
+    const filterBtn = document.querySelector('#filter-button');
+    filterBtn.addEventListener('click', () => {
+        filterBtn.classList.toggle('is-outlined');
+        const filterForm = document.querySelector('#filter-form');
+        filterForm.classList.toggle('is-hidden');
+    });
+
+    let selectedProduct;
+    $(".launchModal").click(function () {
+        $(".modal").addClass("is-active");
+    });
+    $(".modal-close").click(function () {
+        $(".modal").removeClass("is-active");
+    });
+    $("#closebtn").click(function () {
+        $(".modal").removeClass("is-active");
+    });
+    $("#rentBtn").click(function () {
+        $(".modal").removeClass("is-active");
+        window.location = `/rent-item?productId=${selectedProduct}`;
+    });
+</script>
+
+{% endblock %}
