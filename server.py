@@ -15,11 +15,11 @@ def login_page():
     global logged
 
     # first check arguments
-    login_username = request.args.get('username')
+    login_email = request.args.get('email')
     login_password = request.args.get('password')
 
     # check for login attempt
-    if (login_username == None or login_password == None):
+    if (login_email == None or login_password == None):
 
         # no attempt
         # then look if machine already logged in
@@ -34,7 +34,7 @@ def login_page():
     else:
 
         # login successfull
-        if(login_username == 'ali' and login_password == '123'):
+        if(login_email == 'ali' and login_password == '123'):
             logged = True   # set logged true for ~that user~
             return redirect('/')
 
