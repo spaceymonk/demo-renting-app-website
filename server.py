@@ -8,13 +8,57 @@ app = Flask(__name__)
 @app.route('/my-profile')
 def my_profile_page():
     # check for banning in admin
-    return render_template('my-profile.html', logged=logged, admin=False, users=[
-        {'email': 'asd@asd.com', 'name': "James jcoan", 'is_banned': False},
-        {'email': 'asd@asd.com', 'name': "James jcoan", 'is_banned': False},
-        {'email': 'asd@asd.com', 'name': "James jcoan", 'is_banned': True},
-        {'email': 'asd@asd.com', 'name': "James jcoan", 'is_banned': False},
-        {'email': 'asd@asd.com', 'name': "James jcoan", 'is_banned': False}
-    ],)
+    return render_template('my-profile.html', logged=logged, admin=False,
+                           hasProducts=True,
+                           hasOrders=True,
+                           orders=[
+                               {'id': 123123, 'customer': 'asd@asd.com',
+                                   'product_name': 'alican', 'product_id': 1231283}
+                           ],
+                           users=[
+                               {'email': 'asd@asd.com',
+                                   'name': "James jcoan", 'is_banned': False},
+                               {'email': 'asd@asd.com',
+                                   'name': "James jcoan", 'is_banned': False},
+                               {'email': 'asd@asd.com',
+                                   'name': "James jcoan", 'is_banned': True},
+                               {'email': 'asd@asd.com',
+                                   'name': "James jcoan", 'is_banned': False},
+                               {'email': 'asd@asd.com',
+                                   'name': "James jcoan", 'is_banned': False}
+                           ],
+                           products=[
+                               {
+                                   'title': 'el carrot',
+                                   'description': 'this is naica',
+                                   'price': 123,
+                                   'dates': {
+                                       'begin': '12-12-2020',
+                                       'end': '21-12-2020'
+                                   },
+                                   'rating': '4/5'
+                               },
+                               {
+                                   'title': 'el carrot',
+                                   'description': 'this is naica',
+                                   'price': 123,
+                                   'dates': {
+                                       'begin': '12-12-2020',
+                                       'end': '21-12-2020'
+                                   },
+                                   'rating': '4/5'
+                               },
+                               {
+                                   'title': 'el carrot',
+                                   'description': 'this is naica',
+                                   'price': 123,
+                                   'dates': {
+                                       'begin': '12-12-2020',
+                                       'end': '21-12-2020'
+                                   },
+                                   'rating': '4/5'
+                               }
+                           ])
 
 
 @app.route('/login')
@@ -65,9 +109,10 @@ def rent_item_page():
 def home_page():
     return render_template('home.html',
                            logged=logged,
-                           total_item=162703,
+                           total_item=2,
                            products=[
                                {
+                                   'id': 8818,
                                    'title': 'el carrot',
                                    'description': 'this is naica',
                                    'price': 123,
@@ -75,9 +120,9 @@ def home_page():
                                        'begin': '12-12-2020',
                                        'end': '21-12-2020'
                                    },
-                                   'rating': '4/5'
                                },
                                {
+                                   'id': 8818,
                                    'title': 'el carrot',
                                    'description': 'this is naica',
                                    'price': 123,
@@ -85,17 +130,6 @@ def home_page():
                                        'begin': '12-12-2020',
                                        'end': '21-12-2020'
                                    },
-                                   'rating': '4/5'
-                               },
-                               {
-                                   'title': 'el carrot',
-                                   'description': 'this is naica',
-                                   'price': 123,
-                                   'dates': {
-                                       'begin': '12-12-2020',
-                                       'end': '21-12-2020'
-                                   },
-                                   'rating': '4/5'
                                }
                            ])
 

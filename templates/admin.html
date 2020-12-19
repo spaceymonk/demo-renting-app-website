@@ -1,0 +1,35 @@
+<div class="pb-5" style="width: 90%; margin: auto;">
+    <div class="table-container">
+        <table class="table is-hoverable is-fullwidth is-striped is-scrollable">
+            <thead>
+                <tr class="has-background-primary has-text-white">
+                    <th>Email</th>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th class="has-text-right">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                {% for user in users %}
+                <tr>
+                    <td>{{user.email}}</td>
+                    <td>{{user.name}}</td>
+                    {% if user.is_banned %}
+                    <td><span>&#10004;</span> Banned</td>
+                    <td class="has-text-right">
+                        <a href="/my-profile?remove_ban={{user.email}}" class="button is-success">Remove ban</a>
+                    </td>
+                    {% else %}
+                    <td><span>&#10007;</span> Not banned</td>
+                    <td class="has-text-right">
+                        <a href="/my-profile?ban={{user.email}}" class="button is-danger">Ban user</a>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,25 +1,41 @@
-<!-- display products -->
+<h4 class="subtitle has-text-centered">Order History</h4>
 <div class="table-container">
     <table class="table is-hoverable is-fullwidth is-striped is-scrollable">
         <thead>
             <tr class="has-background-primary has-text-white">
                 <th>Order Id</th>
                 <th>Customer</th>
-                <th>Product Id</th>
-                <th>Action</th>
+                <th>Merchant</th>
+                <th>Product</th>
+                <th class="has-text-right">Action</th>
             </tr>
         </thead>
         <tbody>
 
-            {% for product in products %}
-            <tr class="launchModal" onclick="selectedProduct={{ product.id }}" style="cursor: pointer;">
-                <td>{{product.title}}</td>
-                <td>{{product.description}}</td>
-                <td>$&nbsp;{{product.price}}</td>
-                <td>{{product.dates.begin}}&nbsp;-&nbsp;{{product.dates.end}}</td>
-                <td>{{product.rating}}</td>
+            {% if hasOrders %}
+
+            {% for order in orders %}
+            <tr>
+                <td>{{order.id}}</td>
+                <td>{{order.customer}}</td>
+                <td>{{order.merchant}}</td>
+                <td>{{order.product_name}}<sub> Product ID:{{order.product_id}}</sub></td>
+                <td class="has-text-right">
+                    <!-- todo add a modal -->
+                    <a href="/my-profile?reportProduct={{order.product_id}}" class="button is-danger">Report</a>
+                    <a href="/my-profile?rateProduct={{order.product_id}}" class="button is-success">Rate</a>
+                    <a href="/my-profile?removeProduct={{order.product_id}}" class="button is-link">Close</a>
+                </td>
             </tr>
             {% endfor %}
+
+            {% else %}
+
+            <tr>
+                <td colspan="5" style="text-align: center;">Empty</td>
+            </tr>
+
+            {% endif %}
 
         </tbody>
     </table>

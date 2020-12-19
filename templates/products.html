@@ -1,28 +1,123 @@
-<!-- display products -->
-<div class="table-container">
-    <table class="table is-hoverable is-fullwidth is-striped is-scrollable">
-        <thead>
-            <tr class="has-background-primary has-text-white">
-                <th>Name</th>
-                <th>Description</th>
-                <th>Price</th>
-                <th>Date Interval</th>
-                <th>Merchant Rating</th>
-            </tr>
-        </thead>
-        <tbody>
+<div class="columns container">
 
-            {% for product in products %}
-            <tr class="launchModal" onclick="selectedProduct={{ product.id }}" style="cursor: pointer;">
-                <td>{{product.title}}</td>
-                <td>{{product.description}}</td>
-                <td>$&nbsp;{{product.price}}</td>
-                <td>{{product.dates.begin}}&nbsp;-&nbsp;{{product.dates.end}}</td>
-                <td>{{product.rating}}</td>
-            </tr>
-            {% endfor %}
+    <div class="column">
+        <h4 class="subtitle has-text-centered">Displayed Products</h4>
+        <div class="table-container">
+            <table class="table is-hoverable is-fullwidth is-striped is-scrollable">
+                <thead>
+                    <tr class="has-background-primary has-text-white">
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Date Interval</th>
+                        <th class="has-text-right">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
 
-        </tbody>
-    </table>
+                    {% if hasProducts %}
 
+                    {% for product in products %}
+                    <tr>
+                        <td>{{product.title}}</td>
+                        <td>{{product.description}}</td>
+                        <td>$&nbsp;{{product.price}}</td>
+                        <td>{{product.dates.begin}}&nbsp;-&nbsp;{{product.dates.end}}</td>
+                        <td class="has-text-right">
+                            <a href="/my-profile?removeProduct={{product_id}}" class="button is-danger">Remove</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+
+                    {% else %}
+
+                    <tr>
+                        <td colspan="5" style="text-align: center;">Empty</td>
+                    </tr>
+
+                    {% endif %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="column">
+        <h4 class="subtitle has-text-centered">Add New Product</h4>
+
+        <form action="/my-profile" id="product-form">
+
+            <!-- title -->
+            <div class="field">
+                <div class="control">
+                    <input class="input is-rounded has-background-white-ter" type="text"
+                        placeholder="Name of the product" autocomplete="" required name="title" />
+                </div>
+            </div>
+
+            <!-- desc -->
+            <div class="field">
+                <div class="control">
+                    <textarea class="textarea is-rounded  has-background-white-ter" placeholder="Enter a description" required
+                        name="desc"></textarea>
+                </div>
+            </div>
+
+            <!-- price -->
+            <div class="field">
+                <div class="control">
+                    <input class="input is-rounded has-background-white-ter" type="number"
+                        placeholder="Enter price" autocomplete="" required name="price" min="0"/>
+                </div>
+            </div>
+
+
+            <!-- dates -->
+            <div class="field">
+                <div class="columns is-variable is-1">
+                    <div class="column control">
+                        <!-- begin -->
+                        <div class="field">
+                            <div class="control">
+                                <input class="input is-rounded  has-background-white-ter" type="text"
+                                    onfocus="(this.type='date')" onblur="(this.type='text')" placeholder="Begin date"
+                                    autocomplete="" required name="begin" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column control">
+                        <!-- end -->
+                        <div class="field">
+                            <div class="control">
+                                <input class="input is-rounded  has-background-white-ter" type="text"
+                                    onfocus="(this.type='date')" onblur="(this.type='text')" placeholder="End date"
+                                    autocomplete="" required name="end" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- category -->
+            <div class="field">
+                <div class="control">
+                    <div class="select is-fullwidth is-rounded">
+                        <select name="category" class="has-background-white-ter">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            
+
+            <br />
+            <button class="button is-block is-fullwidth is-success is-medium is-rounded" type="submit">
+                Add
+            </button>
+        </form>
+    </div>
 </div>
