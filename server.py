@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect
 
 # todo: create sessions for each ip
+#todo: fix paramters for templates
 logged = True
 app = Flask(__name__)
 

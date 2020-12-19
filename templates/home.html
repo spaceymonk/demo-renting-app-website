@@ -1,3 +1,17 @@
+<!-- Req. Param.
+    * total_item
+    * categories[]
+    * products[]
+        - id
+        - title
+        - descr
+        - price
+        - rating 
+        - dates
+            - begin
+            - end
+-->
+
 {% extends "layout.html" %}
 {% block content %}
 
@@ -88,10 +102,9 @@
                                     <select class="has-background-grey-dark has-text-white" name="category"
                                         id="category">
                                         <option>All</option>
-                                        <option>Furniture</option>
-                                        <option>Car & Motorcycle</option>
-                                        <option>Camping</option>
-                                        <option>Clothing</option>
+                                        {% for category in categories %}
+                                        <option>category</option>
+                                        {% endfor %}
                                     </select>
                                 </div>
                             </div>
@@ -131,7 +144,7 @@
                     {% for product in products %}
                     <tr class="launchModal" onclick="selectedProduct={{ product.id }}" style="cursor: pointer;">
                         <td class="is-4 p-5">{{product.title}}</td>
-                        <td class="is-4 p-5">{{product.description}}</td>
+                        <td class="is-4 p-5">{{product.descr}}</td>
                         <td class="is-4 p-5">$&nbsp;{{product.price}}</td>
                         <td class="is-4 p-5">{{product.dates.begin}}&nbsp;-&nbsp;{{product.dates.end}}</td>
                         <td class="is-4 p-5">{{product.rating}}</td>

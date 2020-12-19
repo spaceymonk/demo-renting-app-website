@@ -1,34 +1,49 @@
+<!-- Required parameters:
+    * password
+    * fname
+    * lname
+    * sex
+    * addr
+-->
+
 <h4 class="subtitle has-text-centered">Change Information</h4>
 
 <form action="/my-profile" id="update-form">
 
     <!-- password -->
     <div class="field">
+        <label class="label has-text-white-ter">Password</label>
         <div class="control">
-            <input class="input is-medium is-rounded  has-background-white-ter" type="password" placeholder="**********"
-                autocomplete="current-password" required name="password" />
+            <input class="input is-medium is-rounded  has-background-grey-light" type="password" placeholder="**********"
+                autocomplete="current-password" required name="password" value="{{password}}" />
         </div>
     </div>
+
+    <br>
 
     <!-- name -->
     <div class="field">
+        <label class="label has-text-white-ter">Name</label>
         <div class="columns is-variable is-1">
             <div class="column control">
-                <input class="input is-medium is-rounded  has-background-white-ter" type="text" placeholder="First name"
-                    autocomplete="current-name" required name="first_name" />
+                <input class="input is-medium is-rounded  has-background-grey-light" type="text" placeholder="First name"
+                    autocomplete="current-name" required name="first_name" value="{{fname}}" />
             </div>
             <div class="column control">
-                <input class="input is-medium is-rounded  has-background-white-ter" type="text" placeholder="Last name"
-                    autocomplete="current-name" required name="last_name" />
+                <input class="input is-medium is-rounded  has-background-grey-light" type="text" placeholder="Last name"
+                    autocomplete="current-name" required name="last_name" value="{{lname}}" />
             </div>
         </div>
     </div>
 
+    <br>
+
     <!-- sex -->
     <div class="field">
+        <label class="label has-text-white-ter">Sex</label>
         <div class="control">
             <div class="select is-fullwidth is-medium is-rounded">
-                <select name="sex" class="has-background-white-ter">
+                <select name="sex" class="has-background-grey-light" value="{{sex}}">
                     <option value="M">Male</option>
                     <option value="F">Female</option>
                     <option value="O">Other</option>
@@ -37,11 +52,14 @@
         </div>
     </div>
 
+    <br>
+
     <!-- address -->
     <div class="field">
+        <label class="label has-text-white-ter">Address</label>
         <div class="control">
-            <textarea class="textarea is-rounded  has-background-white-ter is-medium" placeholder="Address" required
-                name="addr"></textarea>
+            <textarea class="textarea is-rounded  has-background-grey-light is-medium" placeholder="Address" required
+                name="addr" value="{{addr}}"></textarea>
         </div>
     </div>
 
