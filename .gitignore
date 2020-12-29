@@ -1,3 +1,7 @@
 __pycache__/server.cpython-39.pyc
 .vscode/launch.json
 .vscode/settings.json
+__pycache__/utility.cpython-39.pyc
+__pycache__/initDb.cpython-39.pyc
+.vscode/.ropeproject/objectdb
+.vscode/.ropeproject/config.py
