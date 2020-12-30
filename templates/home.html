@@ -1,6 +1,5 @@
 <!-- Req. Param.
     * total_item
-    * categories[]
     * products[]
         - id
         - title
@@ -102,9 +101,11 @@
                                     <select class="has-background-grey-dark has-text-white" name="category"
                                         id="category">
                                         <option>All</option>
-                                        {% for category in categories %}
-                                        <option>category</option>
-                                        {% endfor %}
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                        <option>5</option>
                                     </select>
                                 </div>
                             </div>
@@ -142,12 +143,14 @@
                 <tbody>
 
                     {% for product in products %}
-                    <tr class="launchModal" onclick="selectedProduct={{ product.id }}" style="cursor: pointer;">
-                        <td class="is-4 p-5">{{product.title}}</td>
-                        <td class="is-4 p-5">{{product.descr}}</td>
-                        <td class="is-4 p-5">$&nbsp;{{product.price}}</td>
-                        <td class="is-4 p-5">{{product.dates.begin}}&nbsp;-&nbsp;{{product.dates.end}}</td>
-                        <td class="is-4 p-5">{{product.rating}}</td>
+                    <tr class="launchModal" onclick="selectedProduct={{ product.product_id }}" style="cursor: pointer;">
+                        <td class="is-4 p-5" style="word-wrap: break-word; max-width: 10vw;">{{product.title}}</td>
+                        <td class="is-4 p-5" style="word-wrap: break-word; max-width: 35vw;">{{product.description}}</td>
+                        <td class="is-4 p-5">$&nbsp;{{ '%.2f' % product.price}}</td>
+                        <td class="is-4 p-5">
+                            {{product.date_interval.begin_date.strftime('%Y-%m-%d')}}&nbsp;-&nbsp;{{product.date_interval.end_date.strftime('%Y-%m-%d')}}
+                        </td>
+                        <td class="is-4 p-5" style="max-width: 5vw;">{{product.rating}}</td>
                     </tr>
                     {% endfor %}
 
