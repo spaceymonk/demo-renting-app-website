@@ -1,4 +1,5 @@
 from utility import *
+from passlib.hash import pbkdf2_sha256 as hasher
 import datetime
 
 
@@ -101,6 +102,12 @@ def fillDatabase(connection):
     orders = []
     reports = []
     ratings = []
+
+    # # insert admin
+    # adminpw = hasher.hash("admin")
+    # cursor.execute("""INSERT INTO
+    #                     USERS (EMAIL, PASSPHRASE, REAL_NAME, BIRTHDAY_DATE, SEX, ADDRESS, IS_BANNED, IS_ADMIN, STAMP)
+    #                     VALUES (%s, %s, %s, %s, E, None, False, True, %s)""", ('admin',adminpw, datetime.datetime(2000, 10, 10), datetime.datetime.now()))
 
     # create users
     for user_id in range(1, total_users+1):
