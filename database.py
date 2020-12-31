@@ -5,6 +5,52 @@ import psycopg2 as dbapi2
 import datetime
 
 
+def fetch_FilteredProducts(form):
+    products = []
+
+    # handle price filter
+    min_price = 0
+    max_price = 999999
+    if form.get('min-price') != "":
+        min_price = int(form.get('min-price'))
+    if form.get('max-price') != "":
+        max_price = int(form.get('max-price'))
+    if min_price > max_price:
+        min_price, max_price = max_price, min_price
+
+    # handle date filter
+    begin_date = datetime.datetime(2000, 1, 1)
+    end_date = datetime.datetime(2200, 1, 1)
+    if form.get('datepick-begin') != "":
+        begin_date = datetime.datetime.strptime(form.get('datepick-begin'), "%Y-%m-%d")
+    if form.get('datepick-end') != "":
+        end_date = datetime.datetime.strptime(form.get('datepick-end'), "%Y-%m-%d")
+    if begin_date > end_date:
+        begin_date, end_date = end_date, begin_date
+
+    # generate statement
+    statement = """SELECT * FROM products WHERE
+                    (price >= %s) AND (price <= %s) AND
+                    ((date_interval).begin_date >= %s) AND ((date_interval).end_date <= %s)"""
+
+    # handle category filter
+    category = form.get('category')
+
+    if category == 'All':
+        statement += ';'
+    else:
+        statement += f' AND (category = \'{category}\')'
+        
+
+    with dbapi2.connect(settings.DSN) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(statement, (min_price, max_price, begin_date, end_date))
+            for product in cursor.fetchall():
+                products.append(generate_ProductDict(product))
+
+    return products
+
+
 def fetch_AllProducts():
     # gets all products from the database
 

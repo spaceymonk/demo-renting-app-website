@@ -20,7 +20,11 @@
 
         <div class="columns">
             <div class="column">
+                {% if filtered %}
+                <h1 class="title has-text-white">{{total_item}} item(s) found with filter:</h1>
+                {% else %}
                 <h1 class="title has-text-white">{{total_item}} item(s) listing:</h1>
+                {% endif %}
             </div>
             <div class="column" style="text-align: end;">
                 <div class="button is-primary ml-3 is-outlined is-rounded" id="filter-button">
@@ -36,7 +40,7 @@
 
         <!-- show this form when pressed filter button -->
         <div class="container">
-            <form action="#" class="box has-background-grey-dark is-hidden" id="filter-form">
+            <form action="" method="POST" class="box has-background-grey-dark is-hidden" id="filter-form">
 
                 <div class="columns is-desktop">
 
@@ -63,7 +67,7 @@
                                 <div class="field">
                                     <div class="control has-icons-left">
                                         <input class="input is-rounded has-background-grey-dark has-text-white"
-                                            type="number" min="0" value="0" name="max-price" id="max-price">
+                                            type="number" min="0" value="" name="max-price" id="max-price">
                                         <span class="icon is-left">
                                             <svg style="width:24px;height:24px" viewBox="0 0 24 24">
                                                 <path fill="white"
@@ -116,7 +120,7 @@
 
                 <div class="is-flex is-mobile is-justify-content-center">
                     <div class="mx-2">
-                        <button class="button is-link" type="reset" id="clearBtn">Clear</button>
+                        <button class="button is-link" type="reset" onclick="window.location.href='/'" id="clearBtn">Clear</button>
                     </div>
                     <div class="mx-2">
                         <button class=" button is-success" type="submit">Submit</button>
@@ -142,17 +146,28 @@
                 </thead>
                 <tbody>
 
+                    {% if total_item == 0 %}
+
+                    <tr>
+                        <td colspan="5" class="is-4 p-5"> No item found! </td>
+                    </tr>
+
+                    {% else %}
+
                     {% for product in products %}
                     <tr class="launchModal" onclick="selectedProduct={{ product.product_id }}" style="cursor: pointer;">
                         <td class="is-4 p-5" style="word-wrap: break-word; max-width: 10vw;">{{product.title}}</td>
-                        <td class="is-4 p-5" style="word-wrap: break-word; max-width: 35vw;">{{product.description}}</td>
+                        <td class="is-4 p-5" style="word-wrap: break-word; max-width: 35vw;">{{product.description}}
+                        </td>
                         <td class="is-4 p-5">$&nbsp;{{ '%.2f' % product.price}}</td>
                         <td class="is-4 p-5">
-                            {{product.date_interval.begin_date.strftime('%Y-%m-%d')}}&nbsp;-&nbsp;{{product.date_interval.end_date.strftime('%Y-%m-%d')}}
+                            {{product.date_interval.begin_date.strftime('%Y/%m/%d')}}&nbsp;&mdash;&nbsp;{{product.date_interval.end_date.strftime('%Y/%m/%d')}}
                         </td>
                         <td class="is-4 p-5" style="max-width: 5vw;">{{product.rating}}</td>
                     </tr>
                     {% endfor %}
+
+                    {% endif %}
 
                 </tbody>
             </table>
