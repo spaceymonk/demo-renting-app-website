@@ -3,23 +3,20 @@ from flask import current_app
 
 class User():
 
-    def __init__(self, email, password):
+    def __init__(self, email, password, authenticated, banned):
         self.email = email
-        self.password = password
+        self.passphrase = password
+        self.authenticated = authenticated
+        self.banned = banned
 
     def get_id(self):
         return self.email
 
     def is_authenticated(self):
-        return True
+        return self.authenticated
 
     def is_active(self):
-        return True
+        return not self.banned
 
     def is_anonymous(self):
-        return True
-
-
-def get_user(email, password):
-    user = User(email, password)
-    return user
+        return False

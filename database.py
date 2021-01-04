@@ -1,8 +1,9 @@
 from ast import literal_eval as make_tuple
 
-import settings
 import psycopg2 as dbapi2
 import datetime
+import settings
+from user import User
 
 
 def fetch_FilteredProducts(form):
@@ -40,7 +41,6 @@ def fetch_FilteredProducts(form):
         statement += ';'
     else:
         statement += f' AND (category = \'{category}\')'
-        
 
     with dbapi2.connect(settings.DSN) as connection:
         with connection.cursor() as cursor:
@@ -81,3 +81,16 @@ def generate_ProductDict(product):
         },
         'stamp': product[8],
     }
+
+
+def fetch_user(email, password):
+    snapshot = []
+    with dbapi2.connect(settings.DSN) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT is_banned, is_admin FROM users WHERE (email=%s) AND (passphrase=%s)", (email, password))
+            snapshot = cursor.fetchone()
+    if snapshot is not None:
+        settings.USERMAP[email] = User(email, password, True, snapshot[0])
+        return settings.USERMAP[email]
+    else:
+        return None
