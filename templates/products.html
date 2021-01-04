@@ -38,7 +38,10 @@
                         <td>$&nbsp;{{product.price}}</td>
                         <td>{{product.dates.begin}}&nbsp;-&nbsp;{{product.dates.end}}</td>
                         <td class="has-text-right">
-                            <a href="/my-profile?removeProduct={{id}}" class="button is-danger">Remove</a>
+                            <form action="/remove-product" method="POST">
+                                <input type="hidden" name="id" value="{{product.id}}">
+                                <button type="submit" class="button is-danger">Remove</button>
+                            </form>
                         </td>
                     </tr>
                     {% endfor %}
@@ -61,7 +64,7 @@
     <div class="column">
         <h4 class="subtitle has-text-centered">Add New Product</h4>
 
-        <form action="/my-profile" id="product-form">
+        <form action="/add-product" method="POST"  id="product-form">
 
             <!-- title -->
             <div class="field">

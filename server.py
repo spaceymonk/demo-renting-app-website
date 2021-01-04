@@ -25,4 +25,11 @@ if __name__ == '__main__':
     app.secret_key = settings.SECRET_KEY
     app.add_url_rule("/", view_func=views.home_page, methods=["GET", "POST"])
     app.add_url_rule("/login", view_func=views.login_page, methods=["GET", "POST"])
+    app.add_url_rule("/signup", view_func=views.signup_page, methods=["GET", "POST"])
+    app.add_url_rule("/logout", view_func=views.logout_page, methods=["GET"])
+    app.add_url_rule("/my-profile", view_func=views.my_profile_page, methods=["GET", "POST"])
+    app.add_url_rule("/settings", view_func=views.settings_page, methods=["POST"])
+    app.add_url_rule("/add-product", view_func=views.add_product_page, methods=["POST"])
+    app.add_url_rule("/remove-product", view_func=views.remove_product_page, methods=["POST"])
+    app.add_url_rule("/toggle-ban", view_func=views.toggle_ban_page, methods=["POST"])
     app.run(host='0.0.0.0', port=settings.PORT, debug=settings.DEBUG)

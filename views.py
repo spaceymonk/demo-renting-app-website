@@ -1,8 +1,9 @@
 # THIS FILE IS FOR ROUTING WEBSITE
 
 from flask import render_template, request, redirect, flash
-from flask_login import login_required, login_user
+from flask_login import login_required, login_user, logout_user, current_user
 import database
+
 
 def home_page():
     if (request.method == "GET"):
@@ -31,4 +32,42 @@ def login_page():
 
 @login_required
 def my_profile_page():
-    return render_template("my-profile.html")
+    if current_user.is_admin():
+        users = database.fetch_AllUsers()
+        return render_template("admin.html", users=users, length=len(users))
+    else:
+        return render_template("my-profile.html")
+
+
+@login_required
+def logout_page():
+    logout_user()
+    flash("Successfuly logged out!")
+    return redirect('/')
+
+
+def signup_page():
+    if (request.method == "GET"):
+        return render_template("signup.html")
+    else:
+        pass
+
+
+@login_required
+def settings_page():
+    pass
+
+
+@login_required
+def add_product_page():
+    pass
+
+
+@login_required
+def remove_product_page():
+    pass
+
+
+@login_required
+def toggle_ban_page():
+    pass

@@ -83,14 +83,41 @@ def generate_ProductDict(product):
     }
 
 
+def generate_UserDict(user):
+    return {
+        'user_id': user[0],
+        'email': user[1],
+        'passphrase': user[2],
+        'real_name': {
+            'first_name': user[3].split(',')[0].replace('(', ''),
+            'last_name': user[3].split(',')[1].replace('(', '')
+        },
+        'birthday_date': user[4],
+        'sex': user[5],
+        'address': user[6],
+        'is_banned': user[7],
+        'is_admin': user[8],
+        'stamp': user[9],
+    }
+
 def fetch_user(email, password):
     snapshot = []
     with dbapi2.connect(settings.DSN) as connection:
         with connection.cursor() as cursor:
-            cursor.execute("SELECT is_banned, is_admin FROM users WHERE (email=%s) AND (passphrase=%s)", (email, password))
+            cursor.execute("SELECT is_banned, is_admin FROM users WHERE (email=%s) AND (passphrase=%s);", (email, password))
             snapshot = cursor.fetchone()
+            print(snapshot)
     if snapshot is not None:
-        settings.USERMAP[email] = User(email, password, True, snapshot[0])
+        settings.USERMAP[email] = User(email, password, True, snapshot[0], snapshot[1])
         return settings.USERMAP[email]
     else:
         return None
+
+def fetch_AllUsers():
+    users = []
+    with dbapi2.connect(settings.DSN) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM users;")
+            for user in cursor.fetchall():
+                users.append(generate_UserDict(user))
+    return users

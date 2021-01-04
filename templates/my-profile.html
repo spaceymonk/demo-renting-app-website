@@ -1,7 +1,3 @@
-<!-- Required parameters:
-    * admin
--->
-
 {% extends "layout.html" %}
 {% block content %}
 
@@ -9,24 +5,19 @@
 
     <div class="hero-body box has-background-dark has-shadow columns m-0 p-1">
 
-        <div class="column is-10">
+        <div class="column">
             <h1 class="title">
                 My Profile
             </h1>
-            <h2 class="subtitle">
-                {% if admin %}
-                Admin Panel
-                {% endif %}
-            </h2>
-
         </div>
-        <div class="column has-text-right"><a href="#" class="button is-danger is-rounded">Delete Account</a></div>
-        <div class="column has-text-right"><a href="#" class="button is-link is-rounded">Log out</a></div>
+        <div class="column ">
+            <div class="is-flex is-justify-content-flex-end">
+                <div class="m-1"><a href="#" class="button is-danger is-rounded">Delete Account</a></div>
+                <div class="m-1"><a href="/logout" class="button is-link is-rounded">Log out</a></div>
+            </div>
+        </div>
     </div>
 
-    {% if admin %}
-    {% include 'admin.html' %}
-    {% else %}
     <div class="pb-5">
         <div class="tabs is-boxed is-centered main-menu" id="nav">
             <ul>
@@ -53,8 +44,6 @@
             </div>
         </div>
     </div>
-    {% endif %}
-
 
 </section>
 

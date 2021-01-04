@@ -5,38 +5,70 @@
         - is_banned
 -->
 
-<div class="pb-5" style="width: 90%; margin: auto;">
-    <div class="table-container">
-        <table class="table is-hoverable is-fullwidth is-striped is-scrollable">
-            <thead>
-                <tr class="has-background-primary has-text-white">
-                    <th>Email</th>
-                    <th>Name</th>
-                    <th>Status</th>
-                    <th class="has-text-right">Action</th>
-                </tr>
-            </thead>
-            <tbody>
+{% extends "layout.html" %}
+{% block content %}
 
-                {% for user in users %}
-                <tr>
-                    <td>{{user.email}}</td>
-                    <td>{{user.name}}</td>
-                    {% if user.is_banned %}
-                    <td><span>&#10004;</span> Banned</td>
-                    <td class="has-text-right">
-                        <a href="/my-profile?remove_ban={{user.email}}" class="button is-success">Remove ban</a>
-                    </td>
-                    {% else %}
-                    <td><span>&#10007;</span> Not banned</td>
-                    <td class="has-text-right">
-                        <a href="/my-profile?ban={{user.email}}" class="button is-danger">Ban user</a>
-                    </td>
-                    {% endif %}
-                </tr>
-                {% endfor %}
+<section class="container box p-0 hero is-dark mb-5">
 
-            </tbody>
-        </table>
+
+    <div class="hero-body box has-background-dark has-shadow columns m-0 p-1">
+
+        <div class="column">
+            <h1 class="title">
+                Admin Panel
+            </h1>
+            <h2 class="subtitle">
+                Displaying {{length}} user(s)
+            </h2>
+        </div>
+        <div class="column ">
+            <div class="is-flex is-justify-content-flex-end">
+                <div class="m-1"><a href="/logout" class="button is-link is-rounded">Log out</a></div>
+            </div>
+        </div>
     </div>
-</div>
+
+    <div class="pb-5" style="width: 90%; margin: auto;">
+        <div class="table-container">
+            <table class="table is-hoverable is-fullwidth is-striped is-scrollable">
+                <thead>
+                    <tr class="has-background-primary has-text-white">
+                        <th>Email</th>
+                        <th>Full Name</th>
+                        <th>Status</th>
+                        <th class="has-text-right">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for user in users %}
+                    <tr>
+                        <td>{{user.email}}</td>
+                        <td>{{user.real_name.first_name}}&nbsp;{{user.real_name.last_name}}</td>
+                        {% if user.is_banned %}
+                        <td><span>&#10004;</span> Banned</td>
+                        <td class="has-text-right">
+                            <form action="/toggle-ban" method="POST">
+                                <input type="hidden" name="id" value="{{user.email}}">
+                                <button type="submit" class="button is-success">Remove ban</button>
+                            </form>
+                        </td>
+                        {% else %}
+                        <td><span>&#10007;</span> Not banned</td>
+                        <td class="has-text-right">
+                            <form action="/toggle-ban" method="POST">
+                                <input type="hidden" name="id" value="{{user.email}}">
+                                <button type="submit" class="button is-danger">Ban user</button>
+                            </form>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
