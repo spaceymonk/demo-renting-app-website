@@ -5,3 +5,8 @@ __pycache__/utility.cpython-39.pyc
 __pycache__/initDb.cpython-39.pyc
 .vscode/.ropeproject/objectdb
 .vscode/.ropeproject/config.py
+__pycache__/database_debug.cpython-39.pyc
+__pycache__/database.cpython-39.pyc
+__pycache__/settings.cpython-39.pyc
+templates/home.html
+__pycache__/views.cpython-39.pyc
