@@ -40,7 +40,8 @@ def my_profile_page():
         users = database.fetch_AllUsers()
         return render_template("admin.html", users=users, length=len(users))
     else:
-        return render_template("my-profile.html")
+        userdata = database.fetch_User(current_user.get_id())
+        return render_template("my-profile.html", userdata=userdata)
 
 
 @login_required
@@ -79,7 +80,20 @@ def signup_page():
 
 @login_required
 def settings_page():
-    pass
+    try:
+        fields = {
+            'passphrase': request.form.get('passphrase'),
+            'first_name': request.form.get('first_name'),
+            'last_name': request.form.get('last_name'),
+            'sex': request.form.get('sex'),
+            'address': request.form.get('address'),
+        }
+        database.update_user(current_user.get_id(), fields)
+        flash("Changes Saved!")
+    except Exception as e:
+        flash(f"Something went wrong: {e}")
+    finally:
+        return redirect('/my-profile')
 
 
 @login_required

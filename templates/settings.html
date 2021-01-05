@@ -1,9 +1,5 @@
 <!-- Required parameters:
-    * password
-    * fname
-    * lname
-    * sex
-    * addr
+    * userdata
 -->
 
 <h4 class="subtitle has-text-centered">Change Information</h4>
@@ -15,7 +11,7 @@
         <label class="label has-text-white-ter">Password</label>
         <div class="control">
             <input class="input is-medium is-rounded  has-background-grey-light" type="password" placeholder="**********"
-                autocomplete="current-password" required name="password" value="{{password}}" />
+                autocomplete="current-password" required name="passphrase"/>
         </div>
     </div>
 
@@ -27,11 +23,11 @@
         <div class="columns is-variable is-1">
             <div class="column control">
                 <input class="input is-medium is-rounded  has-background-grey-light" type="text" placeholder="First name"
-                    autocomplete="current-name" required name="first_name" value="{{fname}}" />
+                    autocomplete="current-name" required name="first_name" value="{{userdata.real_name.first_name}}" />
             </div>
             <div class="column control">
                 <input class="input is-medium is-rounded  has-background-grey-light" type="text" placeholder="Last name"
-                    autocomplete="current-name" required name="last_name" value="{{lname}}" />
+                    autocomplete="current-name" required name="last_name" value="{{userdata.real_name.last_name}}" />
             </div>
         </div>
     </div>
@@ -43,10 +39,10 @@
         <label class="label has-text-white-ter">Sex</label>
         <div class="control">
             <div class="select is-fullwidth is-medium is-rounded">
-                <select name="sex" class="has-background-grey-light" value="{{sex}}">
-                    <option value="M">Male</option>
-                    <option value="F">Female</option>
-                    <option value="O">Other</option>
+                <select name="sex" class="has-background-grey-light">
+                    <option value="M" {% if userdata.sex == "M" %} selected {% endif %}>Male</option>
+                    <option value="F" {% if userdata.sex == "F" %} selected {% endif %}>Female</option>
+                    <option value="O" {% if userdata.sex == "O" %} selected {% endif %}>Other</option>
                 </select>
             </div>
         </div>
@@ -59,7 +55,7 @@
         <label class="label has-text-white-ter">Address</label>
         <div class="control">
             <textarea class="textarea is-rounded  has-background-grey-light is-medium" placeholder="Address" required
-                name="addr" value="{{addr}}"></textarea>
+                name="address">{{userdata.address}}</textarea>
         </div>
     </div>
 

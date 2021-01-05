@@ -168,3 +168,10 @@ def create_user(user):
                         USERS (EMAIL, PASSPHRASE, REAL_NAME, BIRTHDAY_DATE, SEX, ADDRESS, IS_BANNED, IS_ADMIN, STAMP)
                         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);""",
                            (user['email'], user['passphrase'], (user['real_name']['first_name'], user['real_name']['last_name']), user['birthday_date'], user['sex'], user['address'], user['is_banned'], user['is_admin'], user['stamp']))
+
+
+def update_user(email, fields):
+    with dbapi2.connect(settings.DSN) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("UPDATE users SET passphrase=%s, real_name=%s, sex=%s, address=%s WHERE email=%s",
+                           (fields['passphrase'], (fields['first_name'], fields['last_name']), fields['sex'], fields['address'], email))
