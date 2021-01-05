@@ -6,6 +6,50 @@ import settings
 from user import User
 
 
+# ---------------------------------------------------------------------------- #
+#                               GENERATE METHODS                               #
+# ---------------------------------------------------------------------------- #
+
+def generate_ProductDict(product):
+    # returns a dictionary that contains product fields
+    return {
+        'product_id': product[0],
+        'creator': product[1],
+        'status': product[2],
+        'title': product[3],
+        'description': product[4],
+        'category': product[5],
+        'price': product[6],
+        'date_interval': {
+            'begin_date': datetime.datetime.strptime(product[7].split(',')[0], "(%Y-%m-%d"),
+            'end_date': datetime.datetime.strptime(product[7].split(',')[1], "%Y-%m-%d)"),
+        },
+        'stamp': product[8],
+    }
+
+
+def generate_UserDict(user):
+    return {
+        'user_id': user[0],
+        'email': user[1],
+        'passphrase': user[2],
+        'real_name': {
+            'first_name': user[3].split(',')[0].replace('(', ''),
+            'last_name': user[3].split(',')[1].replace(')', '')
+        },
+        'birthday_date': user[4],
+        'sex': user[5],
+        'address': user[6],
+        'is_banned': user[7],
+        'is_admin': user[8],
+        'stamp': user[9],
+    }
+
+
+# ---------------------------------------------------------------------------- #
+#                                 FETCH METHODS                                #
+# ---------------------------------------------------------------------------- #
+
 def fetch_FilteredProducts(form):
     products = []
 
@@ -65,59 +109,47 @@ def fetch_AllProducts():
     return products
 
 
-def generate_ProductDict(product):
-    # returns a dictionary that contains product fields
-    return {
-        'product_id': product[0],
-        'creator': product[1],
-        'status': product[2],
-        'title': product[3],
-        'description': product[4],
-        'category': product[5],
-        'price': product[6],
-        'date_interval': {
-            'begin_date': datetime.datetime.strptime(product[7].split(',')[0], "(%Y-%m-%d"),
-            'end_date': datetime.datetime.strptime(product[7].split(',')[1], "%Y-%m-%d)"),
-        },
-        'stamp': product[8],
-    }
-
-
-def generate_UserDict(user):
-    return {
-        'user_id': user[0],
-        'email': user[1],
-        'passphrase': user[2],
-        'real_name': {
-            'first_name': user[3].split(',')[0].replace('(', ''),
-            'last_name': user[3].split(',')[1].replace('(', '')
-        },
-        'birthday_date': user[4],
-        'sex': user[5],
-        'address': user[6],
-        'is_banned': user[7],
-        'is_admin': user[8],
-        'stamp': user[9],
-    }
-
-def fetch_user(email, password):
+def validate_user(email, password):
     snapshot = []
     with dbapi2.connect(settings.DSN) as connection:
         with connection.cursor() as cursor:
             cursor.execute("SELECT is_banned, is_admin FROM users WHERE (email=%s) AND (passphrase=%s);", (email, password))
             snapshot = cursor.fetchone()
-            print(snapshot)
     if snapshot is not None:
         settings.USERMAP[email] = User(email, password, True, snapshot[0], snapshot[1])
         return settings.USERMAP[email]
     else:
         return None
 
+
+def fetch_User(email):
+    with dbapi2.connect(settings.DSN) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM users WHERE email=%s;", (email,))
+            return generate_UserDict(cursor.fetchone())
+
+
 def fetch_AllUsers():
     users = []
     with dbapi2.connect(settings.DSN) as connection:
         with connection.cursor() as cursor:
-            cursor.execute("SELECT * FROM users;")
+            cursor.execute("SELECT * FROM users ORDER BY is_banned DESC;")
             for user in cursor.fetchall():
                 users.append(generate_UserDict(user))
     return users
+
+
+# ---------------------------------------------------------------------------- #
+#                                UPDATE METHODS                                #
+# ---------------------------------------------------------------------------- #
+
+def remove_ban(email):
+    with dbapi2.connect(settings.DSN) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("UPDATE users SET is_banned = false WHERE email = %s", (email,))
+
+
+def add_ban(email):
+    with dbapi2.connect(settings.DSN) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("UPDATE users SET is_banned = true WHERE email = %s", (email,))

@@ -49,7 +49,7 @@
                         <td><span>&#10004;</span> Banned</td>
                         <td class="has-text-right">
                             <form action="/toggle-ban" method="POST">
-                                <input type="hidden" name="id" value="{{user.email}}">
+                                <input type="hidden" name="email" value="{{user.email}}">
                                 <button type="submit" class="button is-success">Remove ban</button>
                             </form>
                         </td>
@@ -57,7 +57,7 @@
                         <td><span>&#10007;</span> Not banned</td>
                         <td class="has-text-right">
                             <form action="/toggle-ban" method="POST">
-                                <input type="hidden" name="id" value="{{user.email}}">
+                                <input type="hidden" name="email" value="{{user.email}}">
                                 <button type="submit" class="button is-danger">Ban user</button>
                             </form>
                         </td>

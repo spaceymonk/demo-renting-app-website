@@ -20,8 +20,11 @@ def login_page():
     if (request.method == "GET"):
         return render_template("login.html")
     else:
-        user = database.fetch_user(request.form.get('email'), request.form.get('password'))
+        user = database.validate_user(request.form.get('email'), request.form.get('password'))
         if user is not None:
+            if not user.is_active():
+                flash("You have been banned!!!")
+                return redirect("/login")
             login_user(user)
             flash("You are logged in!")
             return redirect("/")
@@ -70,4 +73,21 @@ def remove_product_page():
 
 @login_required
 def toggle_ban_page():
-    pass
+    if current_user.is_admin():
+        email = request.form.get('email')
+        user = database.fetch_User(email)
+        print(user)
+        if user['is_banned']:
+            try:
+                database.remove_ban(email)
+                flash(f"Ban removed for: {email}")
+            except:
+                flash("Something went wrong!")
+        else:
+            try:
+                database.add_ban(email)
+                flash(f"User banned: {email}")
+            except:
+                flash("Something went wrong!")
+    return redirect('/my-profile')
+        
