@@ -159,3 +159,12 @@ def remove_user(email):
     with dbapi2.connect(settings.DSN) as connection:
         with connection.cursor() as cursor:
             cursor.execute("DELETE FROM users WHERE email = %s", (email,))
+
+
+def create_user(user):
+    with dbapi2.connect(settings.DSN) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("""INSERT INTO
+                        USERS (EMAIL, PASSPHRASE, REAL_NAME, BIRTHDAY_DATE, SEX, ADDRESS, IS_BANNED, IS_ADMIN, STAMP)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);""",
+                           (user['email'], user['passphrase'], (user['real_name']['first_name'], user['real_name']['last_name']), user['birthday_date'], user['sex'], user['address'], user['is_banned'], user['is_admin'], user['stamp']))

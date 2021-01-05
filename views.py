@@ -3,6 +3,7 @@
 from flask import render_template, request, redirect, flash
 from flask_login import login_required, login_user, logout_user, current_user
 import database
+import datetime
 
 
 def home_page():
@@ -53,7 +54,27 @@ def signup_page():
     if (request.method == "GET"):
         return render_template("signup.html")
     else:
-        pass
+        try:
+            user = {
+                'email': request.form.get('email'),
+                'passphrase': request.form.get('passphrase'),
+                'real_name': {
+                    'first_name': request.form.get('first_name'),
+                    'last_name': request.form.get('last_name')
+                },
+                'birthday_date': datetime.datetime.strptime(request.form.get('birthday_date'), "%Y-%m-%d"),
+                'sex': request.form.get('sex'),
+                'address': request.form.get('address'),
+                'is_banned': False,
+                'is_admin': False,
+                'stamp': datetime.datetime.now()
+            }
+            database.create_user(user)
+            flash("WELCOME :ddd")
+            return redirect("/login")
+        except:
+            flash("Something went wrong!")
+            return redirect('/signup')
 
 
 @login_required
