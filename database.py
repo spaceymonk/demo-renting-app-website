@@ -153,3 +153,9 @@ def add_ban(email):
     with dbapi2.connect(settings.DSN) as connection:
         with connection.cursor() as cursor:
             cursor.execute("UPDATE users SET is_banned = true WHERE email = %s", (email,))
+
+
+def remove_user(email):
+    with dbapi2.connect(settings.DSN) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("DELETE FROM users WHERE email = %s", (email,))

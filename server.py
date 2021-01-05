@@ -24,6 +24,7 @@ if __name__ == '__main__':
     login_manager.login_view = "login_page"
     app.secret_key = settings.SECRET_KEY
     app.add_url_rule("/", view_func=views.home_page, methods=["GET", "POST"])
+    app.add_url_rule("/delete-account", view_func=views.delete_account_page, methods=["GET"])
     app.add_url_rule("/login", view_func=views.login_page, methods=["GET", "POST"])
     app.add_url_rule("/signup", view_func=views.signup_page, methods=["GET", "POST"])
     app.add_url_rule("/logout", view_func=views.logout_page, methods=["GET"])

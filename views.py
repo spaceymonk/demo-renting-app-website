@@ -90,4 +90,9 @@ def toggle_ban_page():
             except:
                 flash("Something went wrong!")
     return redirect('/my-profile')
-        
+
+
+@login_required
+def delete_account_page():
+    database.remove_user(current_user.get_id())
+    return redirect('/logout')
