@@ -4,6 +4,7 @@ from flask import render_template, request, redirect, flash
 from flask_login import login_required, login_user, logout_user, current_user
 import database
 import datetime
+from passlib.hash import pbkdf2_sha256 as hasher
 
 
 def home_page():
@@ -21,7 +22,7 @@ def login_page():
     if (request.method == "GET"):
         return render_template("login.html")
     else:
-        user = database.validate_user(request.form.get('email'), request.form.get('password'))
+        user = database.validate_user(request.form.get('email'), request.form.get('passphrase'))
         if user is not None:
             if not user.is_active():
                 flash("You have been banned!!!")
@@ -59,7 +60,7 @@ def signup_page():
         try:
             user = {
                 'email': request.form.get('email'),
-                'passphrase': request.form.get('passphrase'),
+                'passphrase': hasher.hash(request.form.get('passphrase')),
                 'real_name': {
                     'first_name': request.form.get('first_name'),
                     'last_name': request.form.get('last_name')
@@ -83,7 +84,7 @@ def signup_page():
 def settings_page():
     try:
         fields = {
-            'passphrase': request.form.get('passphrase'),
+            'passphrase': hasher.hash(request.form.get('passphrase')),
             'first_name': request.form.get('first_name'),
             'last_name': request.form.get('last_name'),
             'sex': request.form.get('sex'),
@@ -100,7 +101,6 @@ def settings_page():
 @login_required
 def add_product_page():
     try:
-        print(request.form)
         fields = {
             'creator': current_user.id,
             'status': "Active",
@@ -124,7 +124,13 @@ def add_product_page():
 
 @login_required
 def remove_product_page():
-    pass
+    try:
+        database.remove_product(request.form.get('product_id'))
+        flash('Product removed!')
+    except Exception as e:
+        flash(f"Something went wrong: {e}")
+    finally:
+        return redirect('/my-profile')
 
 
 @login_required

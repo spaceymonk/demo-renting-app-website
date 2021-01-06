@@ -1,4 +1,5 @@
 from ast import literal_eval as make_tuple
+from passlib.hash import pbkdf2_sha256 as hasher
 
 import psycopg2 as dbapi2
 import datetime
@@ -123,15 +124,18 @@ def fetch_AllProducts():
     return products
 
 
-def validate_user(email, password):
+def validate_user(email, passphrase):
     snapshot = []
     with dbapi2.connect(settings.DSN) as connection:
         with connection.cursor() as cursor:
-            cursor.execute("SELECT is_banned, is_admin, user_id FROM users WHERE (email=%s) AND (passphrase=%s);", (email, password))
+            cursor.execute("SELECT is_banned, is_admin, user_id, passphrase FROM users WHERE email=%s;", (email,))
             snapshot = cursor.fetchone()
     if snapshot is not None:
-        settings.USERMAP[email] = User(email, password, True, snapshot[0], snapshot[1], snapshot[2])
-        return settings.USERMAP[email]
+        if hasher.verify(passphrase,snapshot[3]):
+            settings.USERMAP[email] = User(email, True, snapshot[0], snapshot[1], snapshot[2])
+            return settings.USERMAP[email]
+        else:
+            return None
     else:
         return None
 
@@ -173,6 +177,12 @@ def remove_user(email):
     with dbapi2.connect(settings.DSN) as connection:
         with connection.cursor() as cursor:
             cursor.execute("DELETE FROM users WHERE email = %s", (email,))
+
+
+def remove_product(product_id):
+    with dbapi2.connect(settings.DSN) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("DELETE FROM products WHERE product_id = %s", (product_id,))
 
 
 def create_product(fields):

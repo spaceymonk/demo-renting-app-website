@@ -114,7 +114,7 @@ def fillDatabase(connection):
 
         # generate values
         email = get_random_string(random.randint(12, 16))
-        passphrase = get_random_string(random.randint(6, 12))
+        passphrase = hasher.hash(email)
         real_name = (get_random_string(random.randint(6, 12)), get_random_string(random.randint(6, 12)))
         birthday_date = datetime.datetime(random.randint(1950, 2010), random.randint(1, 12), random.randint(1, 28))
         sex = get_random_string(1, letters="MFO")  # :)

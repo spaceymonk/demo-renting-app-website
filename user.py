@@ -3,9 +3,8 @@ from flask import current_app
 
 class User():
 
-    def __init__(self, email, password, authenticated, banned, admin, id):
+    def __init__(self, email, authenticated, banned, admin, id):
         self.email = email
-        self.passphrase = password
         self.authenticated = authenticated
         self.banned = banned
         self.admin = admin
