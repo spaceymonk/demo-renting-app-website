@@ -41,7 +41,8 @@ def my_profile_page():
         return render_template("admin.html", users=users, length=len(users))
     else:
         userdata = database.fetch_User(current_user.get_id())
-        return render_template("my-profile.html", userdata=userdata)
+        products = database.fetch_UserProducts(current_user.id)
+        return render_template("my-profile.html", userdata=userdata, products=products)
 
 
 @login_required
@@ -98,7 +99,27 @@ def settings_page():
 
 @login_required
 def add_product_page():
-    pass
+    try:
+        print(request.form)
+        fields = {
+            'creator': current_user.id,
+            'status': "Active",
+            'title': request.form.get('title'),
+            'description': request.form.get('description'),
+            'category': request.form.get('category'),
+            'price': request.form.get('price'),
+            'date_interval': {
+                'begin_date': datetime.datetime.strptime(request.form.get('begin_date'), "%Y-%m-%d"),
+                'end_date': datetime.datetime.strptime(request.form.get('end_date'), "%Y-%m-%d"),
+            },
+            'stamp': datetime.datetime.now(),
+        }
+        database.create_product(fields)
+        flash("Product Added!")
+    except Exception as e:
+        flash(f"Something went wrong: {e}")
+    finally:
+        return redirect('/my-profile')
 
 
 @login_required

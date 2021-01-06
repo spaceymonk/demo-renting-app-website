@@ -1,5 +1,4 @@
 <!-- Required Parameters
-    * categories[]
     * products[]
         - id
         - title
@@ -29,14 +28,14 @@
                 </thead>
                 <tbody>
 
-                    {% if hasProducts %}
+                    {% if products %}
 
                     {% for product in products %}
                     <tr>
                         <td>{{product.title}}</td>
-                        <td>{{product.descr}}</td>
+                        <td>{{product.description}}</td>
                         <td>$&nbsp;{{product.price}}</td>
-                        <td>{{product.dates.begin}}&nbsp;-&nbsp;{{product.dates.end}}</td>
+                        <td>{{product.date_interval.begin_date.strftime('%Y/%m/%d')}}&nbsp;&mdash;&nbsp;{{product.date_interval.end_date.strftime('%Y/%m/%d')}}</td>
                         <td class="has-text-right">
                             <form action="/remove-product" method="POST">
                                 <input type="hidden" name="id" value="{{product.id}}">
@@ -68,9 +67,9 @@
 
             <!-- title -->
             <div class="field">
-                <label class="label has-text-white-ter">Title</label>
+                <label class="label ">Title</label>
                 <div class="control">
-                    <input class="input is-rounded has-background-grey-light" type="text"
+                    <input class="input is-rounded" type="text"
                         placeholder="Name of the product" autocomplete="" required name="title" />
                 </div>
             </div>
@@ -78,21 +77,21 @@
 
             <!-- desc -->
             <div class="field">
-                <label class="label has-text-white-ter">Description</label>
+                <label class="label ">Description</label>
 
                 <div class="control">
-                    <textarea class="textarea is-rounded  has-background-grey-light" placeholder="Enter a description" required
-                        name="desc"></textarea>
+                    <textarea class="textarea is-rounded " placeholder="Enter a description" required
+                        name="description"></textarea>
                 </div>
             </div>
             <br>
 
             <!-- price -->
             <div class="field">
-                <label class="label has-text-white-ter">Price</label>
+                <label class="label ">Price</label>
 
                 <div class="control">
-                    <input class="input is-rounded has-background-grey-light" type="number"
+                    <input class="input is-rounded" type="number"
                         placeholder="Enter price" autocomplete="" required name="price" min="0"/>
                 </div>
             </div>
@@ -101,16 +100,16 @@
 
             <!-- dates -->
             <div class="field">
-                <label class="label has-text-white-ter">Active time interval</label>
+                <label class="label ">Active time interval</label>
 
                 <div class="columns is-variable is-1">
                     <div class="column control">
                         <!-- begin -->
                         <div class="field">
                             <div class="control">
-                                <input class="input is-rounded  has-background-grey-light" type="text"
+                                <input class="input is-rounded " type="text"
                                     onfocus="(this.type='date')" onblur="(this.type='text')" placeholder="Begin date"
-                                    autocomplete="" required name="begin" />
+                                    autocomplete="" required name="begin_date" />
                             </div>
                         </div>
                     </div>
@@ -118,9 +117,9 @@
                         <!-- end -->
                         <div class="field">
                             <div class="control">
-                                <input class="input is-rounded  has-background-grey-light" type="text"
+                                <input class="input is-rounded " type="text"
                                     onfocus="(this.type='date')" onblur="(this.type='text')" placeholder="End date"
-                                    autocomplete="" required name="end" />
+                                    autocomplete="" required name="end_date" />
                             </div>
                         </div>
                     </div>
@@ -130,14 +129,16 @@
 
             <!-- category -->
             <div class="field">
-                <label class="label has-text-white-ter">Category</label>
+                <label class="label ">Category</label>
 
                 <div class="control">
                     <div class="select is-fullwidth is-rounded">
-                        <select name="category" class="has-background-grey-light">
-                            {% for category in categories %}
-                            <option>category</option>
-                            {% endfor %}
+                        <select name="category" class="">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
                         </select>
                     </div>
                 </div>

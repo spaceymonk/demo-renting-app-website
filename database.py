@@ -95,6 +95,20 @@ def fetch_FilteredProducts(form):
     return products
 
 
+def fetch_UserProducts(id):
+    # gets all products from the database
+
+    products = []
+
+    with dbapi2.connect(settings.DSN) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM products WHERE creator=%s;", (id,))
+            for product in cursor.fetchall():
+                products.append(generate_ProductDict(product))
+
+    return products
+
+
 def fetch_AllProducts():
     # gets all products from the database
 
@@ -113,10 +127,10 @@ def validate_user(email, password):
     snapshot = []
     with dbapi2.connect(settings.DSN) as connection:
         with connection.cursor() as cursor:
-            cursor.execute("SELECT is_banned, is_admin FROM users WHERE (email=%s) AND (passphrase=%s);", (email, password))
+            cursor.execute("SELECT is_banned, is_admin, user_id FROM users WHERE (email=%s) AND (passphrase=%s);", (email, password))
             snapshot = cursor.fetchone()
     if snapshot is not None:
-        settings.USERMAP[email] = User(email, password, True, snapshot[0], snapshot[1])
+        settings.USERMAP[email] = User(email, password, True, snapshot[0], snapshot[1], snapshot[2])
         return settings.USERMAP[email]
     else:
         return None
@@ -161,11 +175,20 @@ def remove_user(email):
             cursor.execute("DELETE FROM users WHERE email = %s", (email,))
 
 
+def create_product(fields):
+    with dbapi2.connect(settings.DSN) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("""INSERT INTO
+                        products (CREATOR, STATUS, TITLE, DESCRIPTION, CATEGORY, PRICE, DATE_INTERVAL, STAMP)
+                            VALUES (%s, %s, %s, %s, %s, %s, %s, %s);""",
+                           (fields['creator'], fields['status'], fields['title'], fields['description'], fields['category'], fields['price'], (fields['date_interval']['begin_date'],  fields['date_interval']['end_date']), fields['stamp']))
+
+
 def create_user(user):
     with dbapi2.connect(settings.DSN) as connection:
         with connection.cursor() as cursor:
             cursor.execute("""INSERT INTO
-                        USERS (EMAIL, PASSPHRASE, REAL_NAME, BIRTHDAY_DATE, SEX, ADDRESS, IS_BANNED, IS_ADMIN, STAMP)
+                        users (EMAIL, PASSPHRASE, REAL_NAME, BIRTHDAY_DATE, SEX, ADDRESS, IS_BANNED, IS_ADMIN, STAMP)
                         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);""",
                            (user['email'], user['passphrase'], (user['real_name']['first_name'], user['real_name']['last_name']), user['birthday_date'], user['sex'], user['address'], user['is_banned'], user['is_admin'], user['stamp']))
 

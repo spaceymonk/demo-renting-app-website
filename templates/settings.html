@@ -10,7 +10,7 @@
     <div class="field">
         <label class="label has-text-white-ter">Password</label>
         <div class="control">
-            <input class="input is-medium is-rounded  has-background-grey-light" type="password" placeholder="**********"
+            <input class="input is-medium is-rounded " type="password" placeholder="**********"
                 autocomplete="current-password" required name="passphrase"/>
         </div>
     </div>
@@ -22,11 +22,11 @@
         <label class="label has-text-white-ter">Name</label>
         <div class="columns is-variable is-1">
             <div class="column control">
-                <input class="input is-medium is-rounded  has-background-grey-light" type="text" placeholder="First name"
+                <input class="input is-medium is-rounded " type="text" placeholder="First name"
                     autocomplete="current-name" required name="first_name" value="{{userdata.real_name.first_name}}" />
             </div>
             <div class="column control">
-                <input class="input is-medium is-rounded  has-background-grey-light" type="text" placeholder="Last name"
+                <input class="input is-medium is-rounded " type="text" placeholder="Last name"
                     autocomplete="current-name" required name="last_name" value="{{userdata.real_name.last_name}}" />
             </div>
         </div>
@@ -39,7 +39,7 @@
         <label class="label has-text-white-ter">Sex</label>
         <div class="control">
             <div class="select is-fullwidth is-medium is-rounded">
-                <select name="sex" class="has-background-grey-light">
+                <select name="sex" class="">
                     <option value="M" {% if userdata.sex == "M" %} selected {% endif %}>Male</option>
                     <option value="F" {% if userdata.sex == "F" %} selected {% endif %}>Female</option>
                     <option value="O" {% if userdata.sex == "O" %} selected {% endif %}>Other</option>
@@ -54,7 +54,7 @@
     <div class="field">
         <label class="label has-text-white-ter">Address</label>
         <div class="control">
-            <textarea class="textarea is-rounded  has-background-grey-light is-medium" placeholder="Address" required
+            <textarea class="textarea is-rounded  is-medium" placeholder="Address" required
                 name="address">{{userdata.address}}</textarea>
         </div>
     </div>
