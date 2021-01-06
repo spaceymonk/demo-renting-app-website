@@ -156,5 +156,10 @@ def toggle_ban_page():
 
 @login_required
 def delete_account_page():
-    database.remove_user(current_user.get_id())
-    return redirect('/logout')
+    try:
+        database.remove_user(current_user.get_id())
+        flash("Account successfully deleted!")
+        return redirect('/logout')
+    except Exception as e:
+        flash(f"Something went wrong: {e}")
+        return redirect('/my-profile')
