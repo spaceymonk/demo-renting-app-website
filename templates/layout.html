@@ -10,11 +10,11 @@
 
 <body class="has-background-black has-text-white">
 
-    {% with messages = get_flashed_messages() %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
     <ul class="flashes">
-        {% for message in messages %}
-        <div class="notification is-info">
+        {% for category, message in messages %}
+        <div class="notification {{category}}">
             <button class="delete"></button>
             <li>{{ message }}</li>
         </div>

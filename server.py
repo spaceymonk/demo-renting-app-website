@@ -22,6 +22,7 @@ if __name__ == '__main__':
 
     login_manager.init_app(app)
     login_manager.login_view = "login_page"
+    login_manager.login_message_category = "is-info"
     app.secret_key = settings.SECRET_KEY
     app.add_url_rule("/", view_func=views.home_page, methods=["GET", "POST"])
     app.add_url_rule("/delete-account", view_func=views.delete_account_page, methods=["GET"])
@@ -33,4 +34,5 @@ if __name__ == '__main__':
     app.add_url_rule("/add-product", view_func=views.add_product_page, methods=["POST"])
     app.add_url_rule("/remove-product", view_func=views.remove_product_page, methods=["POST"])
     app.add_url_rule("/toggle-ban", view_func=views.toggle_ban_page, methods=["POST"])
+    app.add_url_rule("/rent-item", view_func=views.rent_item_page, methods=["GET"])
     app.run(host='0.0.0.0', port=settings.PORT, debug=settings.DEBUG)

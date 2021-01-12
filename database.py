@@ -7,11 +7,27 @@ import settings
 from user import User
 
 
+def validate_user(email, passphrase):
+    snapshot = []
+    with dbapi2.connect(settings.DSN) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT is_banned, is_admin, user_id, passphrase FROM users WHERE email=%s;", (email,))
+            snapshot = cursor.fetchone()
+    if snapshot is not None:
+        if hasher.verify(passphrase, snapshot[3]):
+            settings.USERMAP[email] = User(email, True, snapshot[0], snapshot[1], snapshot[2])
+            return settings.USERMAP[email]
+        else:
+            return None
+    else:
+        return None
+
 # ---------------------------------------------------------------------------- #
 #                               GENERATE METHODS                               #
 # ---------------------------------------------------------------------------- #
 
-def generate_ProductDict(product):
+
+def generate_ProductDict_ByTuple(product):
     # returns a dictionary that contains product fields
     return {
         'product_id': product[0],
@@ -29,7 +45,7 @@ def generate_ProductDict(product):
     }
 
 
-def generate_UserDict(user):
+def generate_UserDict_ByTuple(user):
     return {
         'user_id': user[0],
         'email': user[1],
@@ -47,11 +63,23 @@ def generate_UserDict(user):
     }
 
 
+def generate_OrderDict_ByTuple(order):
+    return {
+        'order_id': order[0],
+        'customer': order[1],
+        'product_id': order[2],
+        'status': order[3],
+        'stamp': order[4],
+    }
+
 # ---------------------------------------------------------------------------- #
 #                                 FETCH METHODS                                #
 # ---------------------------------------------------------------------------- #
 
-def fetch_FilteredProducts(form):
+# --------------------------------- PRODUCTS --------------------------------- #
+
+
+def fetch_Products_ByForm(form):
     products = []
 
     # handle price filter
@@ -83,20 +111,20 @@ def fetch_FilteredProducts(form):
     category = form.get('category')
 
     if category == 'All':
-        statement += ';'
+        statement += 'ORDER BY stamp DESC;'
     else:
-        statement += f' AND (category = \'{category}\')'
+        statement += f' AND (category = \'{category}\') ORDER BY stamp DESC;'
 
     with dbapi2.connect(settings.DSN) as connection:
         with connection.cursor() as cursor:
             cursor.execute(statement, (min_price, max_price, begin_date, end_date))
             for product in cursor.fetchall():
-                products.append(generate_ProductDict(product))
+                products.append(generate_ProductDict_ByTuple(product))
 
     return products
 
 
-def fetch_UserProducts(id):
+def fetch_Products_OfUser_ById(id):
     # gets all products from the database
 
     products = []
@@ -105,96 +133,149 @@ def fetch_UserProducts(id):
         with connection.cursor() as cursor:
             cursor.execute("SELECT * FROM products WHERE creator=%s;", (id,))
             for product in cursor.fetchall():
-                products.append(generate_ProductDict(product))
+                products.append(generate_ProductDict_ByTuple(product))
 
     return products
 
 
-def fetch_AllProducts():
+def fetch_Products_All():
     # gets all products from the database
 
     products = []
 
     with dbapi2.connect(settings.DSN) as connection:
         with connection.cursor() as cursor:
-            cursor.execute("SELECT * FROM products;")
+            cursor.execute("SELECT * FROM products WHERE status='Active';")
             for product in cursor.fetchall():
-                products.append(generate_ProductDict(product))
+                products.append(generate_ProductDict_ByTuple(product))
 
     return products
 
 
-def validate_user(email, passphrase):
-    snapshot = []
+def fetch_Product_ById(product_id):
     with dbapi2.connect(settings.DSN) as connection:
         with connection.cursor() as cursor:
-            cursor.execute("SELECT is_banned, is_admin, user_id, passphrase FROM users WHERE email=%s;", (email,))
-            snapshot = cursor.fetchone()
-    if snapshot is not None:
-        if hasher.verify(passphrase,snapshot[3]):
-            settings.USERMAP[email] = User(email, True, snapshot[0], snapshot[1], snapshot[2])
-            return settings.USERMAP[email]
-        else:
-            return None
-    else:
-        return None
+            cursor.execute("SELECT * FROM products WHERE product_id=%s;", (product_id,))
+            return generate_ProductDict_ByTuple(cursor.fetchone())
+
+# ----------------------------------- USERS ---------------------------------- #
 
 
-def fetch_User(email):
+def fetch_User_ByEmail(email):
     with dbapi2.connect(settings.DSN) as connection:
         with connection.cursor() as cursor:
             cursor.execute("SELECT * FROM users WHERE email=%s;", (email,))
-            return generate_UserDict(cursor.fetchone())
+            return generate_UserDict_ByTuple(cursor.fetchone())
 
 
-def fetch_AllUsers():
+def fetch_User_ById(id):
+    with dbapi2.connect(settings.DSN) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM users WHERE user_id=%s;", (id,))
+            return generate_UserDict_ByTuple(cursor.fetchone())
+
+
+def fetch_Users_All():
     users = []
     with dbapi2.connect(settings.DSN) as connection:
         with connection.cursor() as cursor:
-            cursor.execute("SELECT * FROM users ORDER BY is_banned DESC;")
+            cursor.execute("SELECT * FROM users ORDER BY stamp DESC;")
             for user in cursor.fetchall():
-                users.append(generate_UserDict(user))
+                users.append(generate_UserDict_ByTuple(user))
     return users
+
+
+# ---------------------------------- ORDERS ---------------------------------- #
+
+def fetch_Orders_OfUser_ById(user_id):
+    orders = []
+    with dbapi2.connect(settings.DSN) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM orders WHERE customer=%s ORDER BY stamp DESC;", (user_id, ))
+            for order in cursor.fetchall():
+                orders.append(generate_OrderDict_ByTuple(order))
+            cursor.execute("""SELECT orders.* FROM users
+	                            INNER JOIN products ON users.user_id=products.creator
+	                            INNER JOIN orders ON products.product_id=orders.product_id
+	                            WHERE user_id=%s""", (user_id, ))
+            for order in cursor.fetchall():
+                orders.append(generate_OrderDict_ByTuple(order))
+    return orders
+
+
+def fetch_OrderMetadata_ById(order_id):
+    metadata = {}
+    with dbapi2.connect(settings.DSN) as connection:
+        with connection.cursor() as cursor:
+            # below stmnt fetches product title and product owner
+            cursor.execute("""SELECT title, email FROM users
+	                            INNER JOIN products ON users.user_id=products.creator
+	                            INNER JOIN orders ON products.product_id=orders.product_id
+	                            WHERE order_id=%s""", (order_id, ))
+            dummy = cursor.fetchone()
+            metadata['product_title'] = dummy[0]
+            metadata['merchant'] = dummy[1]
+            # below stmt fetches customer email
+            cursor.execute("""SELECT email FROM users
+	                            INNER JOIN orders ON users.user_id=orders.customer
+	                            WHERE order_id=%s""", (order_id, ))
+            dummy = cursor.fetchone()
+            metadata['customer'] = dummy[0]
+    return metadata
 
 
 # ---------------------------------------------------------------------------- #
 #                                UPDATE METHODS                                #
 # ---------------------------------------------------------------------------- #
 
-def remove_ban(email):
+# ----------------------------------- USERS ---------------------------------- #
+
+
+def update_UserBan_ByEmail(email, banned):
     with dbapi2.connect(settings.DSN) as connection:
         with connection.cursor() as cursor:
-            cursor.execute("UPDATE users SET is_banned = false WHERE email = %s", (email,))
+            cursor.execute("UPDATE users SET is_banned = %s WHERE email = %s", (banned, email))
 
 
-def add_ban(email):
+def update_User_ByEmail(email, fields):
     with dbapi2.connect(settings.DSN) as connection:
         with connection.cursor() as cursor:
-            cursor.execute("UPDATE users SET is_banned = true WHERE email = %s", (email,))
+            cursor.execute("UPDATE users SET passphrase=%s, real_name=%s, sex=%s, address=%s WHERE email=%s",
+                           (fields['passphrase'], (fields['first_name'], fields['last_name']), fields['sex'], fields['address'], email))
+
+# ---------------------------------- PRODUCT --------------------------------- #
 
 
-def remove_user(email):
+def update_ProductStatus_ById(product_id, status):
+    with dbapi2.connect(settings.DSN) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("UPDATE products SET status=%s WHERE product_id=%s",
+                           (status, product_id))
+
+# ---------------------------------------------------------------------------- #
+#                                DELETE METHODS                                #
+# ---------------------------------------------------------------------------- #
+
+
+def delete_User_ByEmail(email):
     with dbapi2.connect(settings.DSN) as connection:
         with connection.cursor() as cursor:
             cursor.execute("DELETE FROM users WHERE email = %s", (email,))
 
 
-def remove_product(product_id):
+def delete_Product_ById(product_id):
     with dbapi2.connect(settings.DSN) as connection:
         with connection.cursor() as cursor:
             cursor.execute("DELETE FROM products WHERE product_id = %s", (product_id,))
 
+# ---------------------------------------------------------------------------- #
+#                                CREATE METHODS                                #
+# ---------------------------------------------------------------------------- #
 
-def create_product(fields):
-    with dbapi2.connect(settings.DSN) as connection:
-        with connection.cursor() as cursor:
-            cursor.execute("""INSERT INTO
-                        products (CREATOR, STATUS, TITLE, DESCRIPTION, CATEGORY, PRICE, DATE_INTERVAL, STAMP)
-                            VALUES (%s, %s, %s, %s, %s, %s, %s, %s);""",
-                           (fields['creator'], fields['status'], fields['title'], fields['description'], fields['category'], fields['price'], (fields['date_interval']['begin_date'],  fields['date_interval']['end_date']), fields['stamp']))
+# ----------------------------------- USERS ---------------------------------- #
 
 
-def create_user(user):
+def create_User(user):
     with dbapi2.connect(settings.DSN) as connection:
         with connection.cursor() as cursor:
             cursor.execute("""INSERT INTO
@@ -203,8 +284,43 @@ def create_user(user):
                            (user['email'], user['passphrase'], (user['real_name']['first_name'], user['real_name']['last_name']), user['birthday_date'], user['sex'], user['address'], user['is_banned'], user['is_admin'], user['stamp']))
 
 
-def update_user(email, fields):
+# --------------------------------- PRODUCTS --------------------------------- #
+
+def create_Product(fields):
     with dbapi2.connect(settings.DSN) as connection:
         with connection.cursor() as cursor:
-            cursor.execute("UPDATE users SET passphrase=%s, real_name=%s, sex=%s, address=%s WHERE email=%s",
-                           (fields['passphrase'], (fields['first_name'], fields['last_name']), fields['sex'], fields['address'], email))
+            cursor.execute("""INSERT INTO
+                        products (CREATOR, STATUS, TITLE, DESCRIPTION, CATEGORY, PRICE, DATE_INTERVAL, STAMP)
+                            VALUES (%s, %s, %s, %s, %s, %s, %s, %s);""",
+                           (fields['creator'], fields['status'], fields['title'], fields['description'], fields['category'], fields['price'], (fields['date_interval']['begin_date'],  fields['date_interval']['end_date']), fields['stamp']))
+
+
+# ---------------------------------- ORDERS ---------------------------------- #
+
+def create_Order_ById(user_id, product_id):
+
+    # get the product
+    product = fetch_Product_ById(product_id)
+
+    # test if avail
+    if product['status'] != "Active":
+        raise Exception('Product is inactive!')
+
+    # get owner
+    owner = fetch_User_ById(product['creator'])
+
+    order_id = None
+
+    # create order
+    with dbapi2.connect(settings.DSN) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("""INSERT INTO
+                                orders (CUSTOMER, PRODUCT_ID, STATUS, STAMP)
+                                VALUES (%s, %s, %s, %s) RETURNING order_id;""",
+                           (user_id, product_id, "Active", datetime.datetime.now()))
+            order_id = cursor.fetchone()
+
+    # preserve product
+    update_ProductStatus_ById(product_id, "Rented")
+
+    return order_id[0], owner['email']

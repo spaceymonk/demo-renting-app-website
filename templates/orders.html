@@ -1,11 +1,10 @@
-<!-- todo: implenet rating / report modal -->
-
 <h4 class="subtitle has-text-centered">Order History</h4>
 <div class="table-container">
     <table class="table is-hoverable is-fullwidth is-striped is-scrollable">
         <thead>
             <tr class="has-background-primary has-text-white">
                 <th>Order Id</th>
+                <th>Status</th>
                 <th>Customer</th>
                 <th>Merchant</th>
                 <th>Product</th>
@@ -14,19 +13,23 @@
         </thead>
         <tbody>
 
-            {% if hasOrders %}
+            {% if orders %}
 
             {% for order in orders %}
             <tr>
-                <td>{{order.id}}</td>
-                <td>{{order.customer}}</td>
-                <td>{{order.merchant}}</td>
-                <td>{{order.product_name}}<sub> Product ID:{{order.product_id}}</sub></td>
+                <td>{{order.order_id}}</td>
+                <td>{{order.status}}</td>
+                <td>{{order.metadata.customer}}</td>
+                <td>{{order.metadata.merchant}}</td>
+                <td>{{order.metadata.product_title}}<sub> Product ID:{{order.product_id}}</sub></td>
                 <td class="has-text-right">
-                    <!-- todo add a modal -->
-                    <a href="/my-profile?reportProduct={{order.product_id}}" class="button is-danger">Report</a>
-                    <a href="/my-profile?rateProduct={{order.product_id}}" class="button is-success">Rate</a>
-                    <!-- <a href="/my-profile?removeProduct={{order.product_id}}" class="button is-link">Close</a> -->
+                    {% if order.status == "Active" %}
+                    <button class="button is-danger launchReportModal">Report</button>
+                    <button class="button is-success launchRateModal">Rate</button>
+                    <button class="button is-link">Close</button>
+                    {% else %}
+                    <p>Order is not active</p>
+                    {% endif %}
                 </td>
             </tr>
             {% endfor %}
@@ -43,3 +46,88 @@
     </table>
 
 </div>
+
+<div id="report-modal" class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <div class="box">
+            <article class="media">
+                <div class="media-left"></div>
+                <div class="media-content">
+                    <form action="/report" method="POST">
+                        <div class="content">
+                            <h4 class="title has-text-black mb-1">Create Report</h4>
+                            <em>This action will abort the order!</em>
+                            <textarea name="problem" placeholder="Please state your problem..." class="mt-5"
+                                style="width: 100%; font-size: large; height: 40vh;"></textarea>
+                        </div>
+                        <div class="is-flex is-justify-content-flex-end">
+                            <button type="submit" class="button is-danger is-small">Report</button>
+                            <button type="button" class="button is-info is-small ml-3 closeBtn">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </article>
+        </div>
+    </div>
+</div>
+
+<div id="rate-modal" class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <div class="box">
+            <article class="media">
+                <div class="media-left"></div>
+                <div class="media-content">
+                    <form action="/rate" method="POST">
+                        <div class="content">
+                            <h4 class="title has-text-black mb-1">Rate User</h4>
+                            <em>This action will complete the order!</em>
+                            <br>
+                            <div class="is-flex is-justify-content-space-around my-5">
+                                <span>
+                                    <label>1</label>
+                                    <input type="radio" id="r1" name="rate" value="1">
+                                </span>
+                                <span>
+                                    <label>2</label>
+                                    <input type="radio" id="r2" name="rate" value="2">
+                                </span>
+                                <span>
+                                    <label>3</label>
+                                    <input type="radio" id="r3" name="rate" value="3">
+                                </span>
+                                <span>
+                                    <label>4</label>
+                                    <input type="radio" id="r3" name="rate" value="4">
+                                </span>
+                                <span>
+                                    <label>5</label>
+                                    <input type="radio" id="r3" name="rate" value="5">
+                                </span>
+                            </div>
+
+                        </div>
+                        <div class="is-flex is-justify-content-flex-end">
+                            <button type="submit" class="button is-success is-small">Rate</button>
+                            <button type="button" class="button is-info is-small ml-3 closeBtn">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </article>
+        </div>
+    </div>
+</div>
+
+<script>
+    let selectedProduct;
+    $(".launchReportModal").click(function () {
+        $("#report-modal").addClass("is-active");
+    });
+    $(".launchRateModal").click(function () {
+        $("#rate-modal").addClass("is-active");
+    });
+    $(".closeBtn").click(function () {
+        $(".modal").removeClass("is-active");
+    });
+</script>

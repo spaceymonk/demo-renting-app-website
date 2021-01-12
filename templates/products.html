@@ -13,9 +13,9 @@
 <div class="columns container">
 
     <!-- displayed products -->
-    <div class="column">
+    <div class="column is-6">
         <h4 class="subtitle has-text-centered">Displayed Products</h4>
-        <div class="table-container">
+        <div class="table-container" ">
             <table class="table is-hoverable is-fullwidth is-striped is-scrollable">
                 <thead>
                     <tr class="has-background-primary has-text-white">
@@ -35,7 +35,7 @@
                     <tr>
                         <td>{{product.status}}</td>
                         <td>{{product.title}}</td>
-                        <td>{{product.description}}</td>
+                        <td style="word-wrap: break-word;">{{product.description}}</td>
                         <td>$&nbsp;{{product.price}}</td>
                         <td>{{product.date_interval.begin_date.strftime('%Y/%m/%d')}}&nbsp;&mdash;&nbsp;{{product.date_interval.end_date.strftime('%Y/%m/%d')}}</td>
                         <td class="has-text-right">
@@ -62,14 +62,14 @@
     </div>
 
     <!-- add new product -->
-    <div class="column">
+    <div class="column is-6">
         <h4 class="subtitle has-text-centered">Add New Product</h4>
 
         <form action="/add-product" method="POST"  id="product-form">
 
             <!-- title -->
             <div class="field">
-                <label class="label ">Title</label>
+                <label class="label has-text-white">Title</label>
                 <div class="control">
                     <input class="input is-rounded" type="text"
                         placeholder="Name of the product" autocomplete="" required name="title" />
@@ -79,7 +79,7 @@
 
             <!-- desc -->
             <div class="field">
-                <label class="label ">Description</label>
+                <label class="label has-text-white">Description</label>
 
                 <div class="control">
                     <textarea class="textarea is-rounded " placeholder="Enter a description" required
@@ -90,7 +90,7 @@
 
             <!-- price -->
             <div class="field">
-                <label class="label ">Price</label>
+                <label class="label has-text-white">Price</label>
 
                 <div class="control">
                     <input class="input is-rounded" type="number"
@@ -102,7 +102,7 @@
 
             <!-- dates -->
             <div class="field">
-                <label class="label ">Active time interval</label>
+                <label class="label has-text-white">Active time interval</label>
 
                 <div class="columns is-variable is-1">
                     <div class="column control">
@@ -131,7 +131,7 @@
 
             <!-- category -->
             <div class="field">
-                <label class="label ">Category</label>
+                <label class="label has-text-white">Category</label>
 
                 <div class="control">
                     <div class="select is-fullwidth is-rounded">
