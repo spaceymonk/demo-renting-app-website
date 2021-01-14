@@ -221,6 +221,7 @@ def fetch_OrderMetadata_ById(order_id):
     metadata = {}
     with dbapi2.connect(settings.DSN) as connection:
         with connection.cursor() as cursor:
+
             # below stmnt fetches product title and product owner
             cursor.execute("""SELECT title, email FROM users
 	                            INNER JOIN products ON users.user_id=products.creator
@@ -229,12 +230,19 @@ def fetch_OrderMetadata_ById(order_id):
             dummy = cursor.fetchone()
             metadata['product_title'] = dummy[0]
             metadata['merchant'] = dummy[1]
+
             # below stmt fetches customer email
             cursor.execute("""SELECT email FROM users
 	                            INNER JOIN orders ON users.user_id=orders.customer
 	                            WHERE order_id=%s""", (order_id, ))
             dummy = cursor.fetchone()
             metadata['customer'] = dummy[0]
+
+            # below stmt fetches report for that order
+            cursor.execute("SELECT problem FROM reports WHERE order_id=%s", (order_id,))
+            dummy = cursor.fetchone()
+            if dummy is not None:
+                metadata['problem'] = dummy[0]
     return metadata
 
 
@@ -321,7 +329,7 @@ def create_Product(fields):
 
 # ---------------------------------- ORDERS ---------------------------------- #
 
-def create_Order_ById(user_id, product_id):
+def create_Order(user_id, product_id):
 
     # get the product
     product = fetch_Product_ById(product_id)
@@ -353,3 +361,11 @@ def create_Order_ById(user_id, product_id):
 # ---------------------------------- RATING ---------------------------------- #
 
 # ---------------------------------- REPORT ---------------------------------- #
+
+def create_Report(fields):
+    with dbapi2.connect(settings.DSN) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("""INSERT INTO
+                        reports (CREATOR, ORDER_ID, PROBLEM, STAMP)
+                            VALUES (%s, %s, %s, %s);""",
+                           (fields['creator'], fields['order_id'], fields['problem'], fields['stamp']))

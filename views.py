@@ -190,7 +190,7 @@ def rent_item_page():
         return redirect('/')
     else:
         try:
-            order_id, email = database.create_Order_ById(current_user.id, product_id)
+            order_id, email = database.create_Order(current_user.id, product_id)
             return render_template("rent-item.html", product_id=product_id, email=email, order_id=order_id)
         except Exception as e:
             flash(f"Something went wrong: {e}", 'is-danger')
@@ -199,8 +199,22 @@ def rent_item_page():
 
 @login_required
 def report_page():
-    print(request.form)
-    return redirect('/my-profile')
+    try:
+        fields = {
+            'creator': current_user.id,
+            'order_id': request.form.get('order_id'),
+            'problem': request.form.get('problem'),
+            'stamp': datetime.datetime.now()
+        }
+        database.create_Report(fields)
+        database.update_OrderStatus_ById(request.form.get('order_id'), 'Aborted')
+        order = database.fetch_Order_ById(request.form.get('order_id'))
+        database.update_ProductStatus_ById(order['product_id'], 'Hidden')
+        flash('Report has been created!', 'is-success')
+    except Exception as e:
+        flash(f"Something went wrong: {e}", 'is-danger')
+    finally:
+        return redirect('/my-profile')
 
 
 @login_required
