@@ -210,4 +210,12 @@ def rate_page():
 
 @login_required
 def close_order_page():
-    pass
+    try:
+        database.update_OrderStatus_ById(request.form.get('order_id'), 'Close')
+        order = database.fetch_Order_ById(request.form.get('order_id'))
+        database.update_ProductStatus_ById(order['product_id'], 'Hidden')
+        flash('Order Closed!', 'is-success')
+    except Exception as e:
+        flash(f"Something went wrong: {e}", 'is-danger')
+    finally:
+        return redirect('/my-profile')

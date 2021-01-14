@@ -194,6 +194,13 @@ def get_UserScore_ById(user_id):
 # ---------------------------------- ORDERS ---------------------------------- #
 
 
+def fetch_Order_ById(order_id):
+    with dbapi2.connect(settings.DSN) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM orders WHERE order_id=%s;", (order_id, ))
+            return generate_OrderDict_ByTuple(cursor.fetchone())
+
+
 def fetch_Orders_OfUser_ById(user_id):
     orders = []
     with dbapi2.connect(settings.DSN) as connection:
@@ -258,6 +265,16 @@ def update_ProductStatus_ById(product_id, status):
         with connection.cursor() as cursor:
             cursor.execute("UPDATE products SET status=%s WHERE product_id=%s",
                            (status, product_id))
+
+
+# ----------------------------------- ORDER ---------------------------------- #
+
+def update_OrderStatus_ById(order_id, status):
+    with dbapi2.connect(settings.DSN) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("UPDATE orders SET status=%s WHERE order_id=%s",
+                           (status, order_id))
+
 
 # ---------------------------------------------------------------------------- #
 #                                DELETE METHODS                                #
@@ -331,3 +348,8 @@ def create_Order_ById(user_id, product_id):
     update_ProductStatus_ById(product_id, "Rented")
 
     return order_id[0], owner['email']
+
+
+# ---------------------------------- RATING ---------------------------------- #
+
+# ---------------------------------- REPORT ---------------------------------- #

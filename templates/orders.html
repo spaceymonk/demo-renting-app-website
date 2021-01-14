@@ -41,7 +41,11 @@
                         </form>
                     </span>
                     {% else %}
-                    <p>Order is not active</p>
+                    <span class="column">
+                        <button class="button is-success launchRateModal"
+                            onclick="$('.order').val('{{order.order_id}}'); $('#rate-modal').addClass('is-active');">
+                            Rate</button>
+                    </span>
                     {% endif %}
                 </td>
             </tr>
@@ -97,12 +101,12 @@
                         <input type="hidden" name="order_id" class="order">
                         <div class="content">
                             <h4 class="title has-text-black mb-1">Rate User</h4>
-                            <em>This action will complete the order!</em>
+                            <em>You can only rate the same user ONCE!</em>
                             <br>
                             <div class="is-flex is-justify-content-space-around my-5">
                                 <span>
                                     <label>1</label>
-                                    <input type="radio" id="r1" name="rate" value="1">
+                                    <input type="radio" id="r1" name="rate" value="1" selected>
                                 </span>
                                 <span>
                                     <label>2</label>

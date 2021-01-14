@@ -16,58 +16,50 @@
     <div class="column is-6">
         <h4 class="subtitle has-text-centered">Displayed Products</h4>
         <div class="table-container" ">
-            <table class="table is-hoverable is-fullwidth is-striped is-scrollable">
-                <thead>
-                    <tr class="has-background-primary has-text-white">
-                        <th>Status</th>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Price</th>
-                        <th>Date Interval</th>
-                        <th class="has-text-right">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <table class=" table is-hoverable is-fullwidth is-striped is-scrollable">
+            <thead>
+                <tr class="has-background-primary has-text-white">
+                    <th>Status</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Date Interval</th>
+                    <th class="has-text-right">Action</th>
+                </tr>
+            </thead>
+            <tbody>
 
-                    {% if products %}
+                {% if products %}
 
-                    {% for product in products %}
-                    <tr>
-                        <td>{{product.status}}</td>
-                        <td>{{product.title}}</td>
-                        <td style="word-wrap: break-word;">{{product.description}}</td>
-                        <td>$&nbsp;{{product.price}}</td>
-                        <td>{{product.date_interval.begin_date.strftime('%Y/%m/%d')}}&nbsp;&mdash;&nbsp;{{product.date_interval.end_date.strftime('%Y/%m/%d')}}</td>
-                        <td class="has-text-right columns is-gapless">
-                            <span class="column">
-                                <button type="button" class="button is-info">
-                                    {% if product.status == "Active" %}
-                                    Hide
-                                    {% elif product.status == "Hidden" %}
-                                    Show
-                                    {% endif %}
-                                </button>
-                            </span>
-                            <span class="column">
-                                <form action="/remove-product" method="POST">
-                                    <input type="hidden" name="product_id" value="{{product.product_id}}">
-                                    <button type="submit" class="button is-danger">Remove</button>
-                                </form>
-                            </span>
-                        </td>
-                    </tr>
-                    {% endfor %}
+                {% for product in products %}
+                <tr>
+                    <td>{{product.status}}</td>
+                    <td>{{product.title}}</td>
+                    <td style="word-wrap: break-word;">{{product.description}}</td>
+                    <td>$&nbsp;{{product.price}}</td>
+                    <td>{{product.date_interval.begin_date.strftime('%Y/%m/%d')}}&nbsp;&mdash;&nbsp;{{product.date_interval.end_date.strftime('%Y/%m/%d')}}
+                    </td>
+                    <td class="has-text-right columns is-gapless">
+                        <span class="column">
+                            <form action="/remove-product" method="POST">
+                                <input type="hidden" name="product_id" value="{{product.product_id}}">
+                                <button type="submit" class="button is-danger">Remove</button>
+                            </form>
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
 
 
-                    {% else %}
+                {% else %}
 
-                    <tr>
-                        <td colspan="5" style="text-align: center;">Empty</td>
-                    </tr>
+                <tr>
+                    <td colspan="5" style="text-align: center;">Empty</td>
+                </tr>
 
-                    {% endif %}
+                {% endif %}
 
-                </tbody>
+            </tbody>
             </table>
         </div>
     </div>
@@ -76,14 +68,14 @@
     <div class="column is-6">
         <h4 class="subtitle has-text-centered">Add New Product</h4>
 
-        <form action="/add-product" method="POST"  id="product-form">
+        <form action="/add-product" method="POST" id="product-form">
 
             <!-- title -->
             <div class="field">
                 <label class="label has-text-white">Title</label>
                 <div class="control">
-                    <input class="input is-rounded" type="text"
-                        placeholder="Name of the product" autocomplete="" required name="title" />
+                    <input class="input is-rounded" type="text" placeholder="Name of the product" autocomplete=""
+                        required name="title" />
                 </div>
             </div>
             <br>
@@ -104,8 +96,8 @@
                 <label class="label has-text-white">Price</label>
 
                 <div class="control">
-                    <input class="input is-rounded" type="number"
-                        placeholder="Enter price" autocomplete="" required name="price" min="0"/>
+                    <input class="input is-rounded" type="number" placeholder="Enter price" autocomplete="" required
+                        name="price" min="0" />
                 </div>
             </div>
             <br>
@@ -120,9 +112,9 @@
                         <!-- begin -->
                         <div class="field">
                             <div class="control">
-                                <input class="input is-rounded " type="text"
-                                    onfocus="(this.type='date')" onblur="(this.type='text')" placeholder="Begin date"
-                                    autocomplete="" required name="begin_date" />
+                                <input class="input is-rounded " type="text" onfocus="(this.type='date')"
+                                    onblur="(this.type='text')" placeholder="Begin date" autocomplete="" required
+                                    name="begin_date" />
                             </div>
                         </div>
                     </div>
@@ -130,9 +122,9 @@
                         <!-- end -->
                         <div class="field">
                             <div class="control">
-                                <input class="input is-rounded " type="text"
-                                    onfocus="(this.type='date')" onblur="(this.type='text')" placeholder="End date"
-                                    autocomplete="" required name="end_date" />
+                                <input class="input is-rounded " type="text" onfocus="(this.type='date')"
+                                    onblur="(this.type='text')" placeholder="End date" autocomplete="" required
+                                    name="end_date" />
                             </div>
                         </div>
                     </div>
