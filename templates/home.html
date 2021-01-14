@@ -141,7 +141,7 @@
                         <th>Description</th>
                         <th>Price</th>
                         <th>Date Interval</th>
-                        <th>Merchant Rating</th>
+                        <th>Merchant's Score</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -163,7 +163,7 @@
                         <td class="is-4 p-5">
                             {{product.date_interval.begin_date.strftime('%Y/%m/%d')}}&nbsp;&mdash;&nbsp;{{product.date_interval.end_date.strftime('%Y/%m/%d')}}
                         </td>
-                        <td class="is-4 p-5" style="max-width: 5vw;">{{product.rating}}</td>
+                        <td class="is-4 p-5" style="max-width: 5vw;">{{product.merchant_rating}}</td>
                     </tr>
                     {% endfor %}
 

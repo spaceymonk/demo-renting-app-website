@@ -22,11 +22,24 @@
                 <td>{{order.metadata.customer}}</td>
                 <td>{{order.metadata.merchant}}</td>
                 <td>{{order.metadata.product_title}}<sub> Product ID:{{order.product_id}}</sub></td>
-                <td class="has-text-right">
+                <td class="has-text-right columns is-gapless">
                     {% if order.status == "Active" %}
-                    <button class="button is-danger launchReportModal">Report</button>
-                    <button class="button is-success launchRateModal">Rate</button>
-                    <button class="button is-link">Close</button>
+                    <span class="column">
+                        <button class="button is-danger launchReportModal"
+                            onclick="$('.order').val('{{order.order_id}}'); $('#report-modal').addClass('is-active');">
+                            Report</button>
+                    </span>
+                    <span class="column">
+                        <button class="button is-success launchRateModal"
+                            onclick="$('.order').val('{{order.order_id}}'); $('#rate-modal').addClass('is-active');">
+                            Rate</button>
+                    </span>
+                    <span class="column">
+                        <form action="/close-order" method="POST">
+                            <input type="hidden" name="order_id" value="{{order.order_id}}">
+                            <button type="submit" class="button is-link">Close</button>
+                        </form>
+                    </span>
                     {% else %}
                     <p>Order is not active</p>
                     {% endif %}
@@ -55,6 +68,7 @@
                 <div class="media-left"></div>
                 <div class="media-content">
                     <form action="/report" method="POST">
+                        <input type="hidden" name="order_id" class="order">
                         <div class="content">
                             <h4 class="title has-text-black mb-1">Create Report</h4>
                             <em>This action will abort the order!</em>
@@ -80,6 +94,7 @@
                 <div class="media-left"></div>
                 <div class="media-content">
                     <form action="/rate" method="POST">
+                        <input type="hidden" name="order_id" class="order">
                         <div class="content">
                             <h4 class="title has-text-black mb-1">Rate User</h4>
                             <em>This action will complete the order!</em>
@@ -120,13 +135,12 @@
 </div>
 
 <script>
-    let selectedProduct;
-    $(".launchReportModal").click(function () {
-        $("#report-modal").addClass("is-active");
-    });
-    $(".launchRateModal").click(function () {
-        $("#rate-modal").addClass("is-active");
-    });
+    // $(".launchReportModal").click(function () {
+    //     $("#report-modal").addClass("is-active");
+    // });
+    // $(".launchRateModal").click(function () {
+    //     $("#rate-modal").addClass("is-active");
+    // });
     $(".closeBtn").click(function () {
         $(".modal").removeClass("is-active");
     });

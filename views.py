@@ -11,6 +11,8 @@ def home_page():
     if (request.method == "GET"):
         # first fetch the data from the database
         products = database.fetch_Products_All()
+        for product in products:
+            product['merchant_rating'] = database.get_UserScore_ById(product['creator'])
         # display it
         return render_template("home.html", total_item=len(products), products=products, filtered=False)
     else:
@@ -193,3 +195,19 @@ def rent_item_page():
         except Exception as e:
             flash(f"Something went wrong: {e}", 'is-danger')
             return redirect("/")
+
+
+@login_required
+def report_page():
+    print(request.form)
+    return redirect('/my-profile')
+
+
+@login_required
+def rate_page():
+    pass
+
+
+@login_required
+def close_order_page():
+    pass

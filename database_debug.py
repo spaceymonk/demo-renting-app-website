@@ -139,7 +139,7 @@ def fillDatabase(connection):
             # generate values
             total_products += 1
             creator = user_id
-            status = random.choice(["Active", "Disabled"])
+            status = random.choice(["Active", "Hidden"])
             title = get_random_string(random.randint(5, 15))
             description = get_random_string(random.randint(30, 200))
             category = random.choice([str(x+1) for x in range(5)])
@@ -166,7 +166,7 @@ def fillDatabase(connection):
         customer = random.randint(1, total_users)   # randomly select a user (some may chosen zero or multiple times)
         while customer == owner_of_product:   # but owner can not order the hers product, make sure selecting each product only once
             customer = random.randint(1, total_users)
-        status = random.choice(["Shipping", "Aborted", "Taken", "Returned"])
+        status = random.choice(["Aborted", "Rated", "Closed"])
         stamp = datetime.datetime.now()
 
         # save them to memory

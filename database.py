@@ -185,7 +185,14 @@ def fetch_Users_All():
     return users
 
 
+def get_UserScore_ById(user_id):
+    with dbapi2.connect(settings.DSN) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT SUM(score) FROM ratings WHERE target=%s;", (user_id,))
+            return cursor.fetchone()[0]
+
 # ---------------------------------- ORDERS ---------------------------------- #
+
 
 def fetch_Orders_OfUser_ById(user_id):
     orders = []

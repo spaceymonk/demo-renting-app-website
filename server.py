@@ -35,4 +35,7 @@ if __name__ == '__main__':
     app.add_url_rule("/remove-product", view_func=views.remove_product_page, methods=["POST"])
     app.add_url_rule("/toggle-ban", view_func=views.toggle_ban_page, methods=["POST"])
     app.add_url_rule("/rent-item", view_func=views.rent_item_page, methods=["GET"])
+    app.add_url_rule("/report", view_func=views.report_page, methods=["POST"])
+    app.add_url_rule("/rate", view_func=views.rate_page, methods=["POST"])
+    app.add_url_rule("/close-order", view_func=views.close_order_page, methods=["POST"])
     app.run(host='0.0.0.0', port=settings.PORT, debug=settings.DEBUG)
