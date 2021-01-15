@@ -219,13 +219,34 @@ def report_page():
 
 @login_required
 def rate_page():
-    pass
+    try:
+        fields = {
+            'creator': current_user.id,
+            'score': request.form.get('rate'),
+            'stamp': datetime.datetime.now()
+        }
+        # get order object
+        order = database.fetch_Order_ById(request.form.get('order_id'))
+
+        # find the other participant
+        if order['customer'] != current_user.id:
+            fields['target'] = order['customer']
+        else:
+            product = database.fetch_Product_ById(order['product_id'])
+            fields['target'] = product['creator']
+
+        database.create_Rate(fields)
+        flash('User has been rated!', 'is-success')
+    except Exception as e:
+        flash(f"Something went wrong: {e}", 'is-danger')
+    finally:
+        return redirect('/my-profile')
 
 
 @login_required
 def close_order_page():
     try:
-        database.update_OrderStatus_ById(request.form.get('order_id'), 'Close')
+        database.update_OrderStatus_ById(request.form.get('order_id'), 'Closed')
         order = database.fetch_Order_ById(request.form.get('order_id'))
         database.update_ProductStatus_ById(order['product_id'], 'Hidden')
         flash('Order Closed!', 'is-success')

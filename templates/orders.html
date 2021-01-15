@@ -66,11 +66,6 @@
                             Report</button>
                     </span>
                     <span class="column">
-                        <button class="button is-success launchRateModal"
-                            onclick="$('.order').val('{{order.order_id}}'); $('#rate-modal').addClass('is-active');">
-                            Rate</button>
-                    </span>
-                    <span class="column">
                         <form action="/close-order" method="POST">
                             <input type="hidden" name="order_id" value="{{order.order_id}}">
                             <button type="submit" class="button is-link">Close</button>

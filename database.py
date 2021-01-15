@@ -360,6 +360,15 @@ def create_Order(user_id, product_id):
 
 # ---------------------------------- RATING ---------------------------------- #
 
+def create_Rate(fields):
+    with dbapi2.connect(settings.DSN) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("""INSERT INTO
+                        ratings (CREATOR, TARGET, SCORE, STAMP)
+                            VALUES (%s, %s, %s, %s);""",
+                           (fields['creator'], fields['target'], fields['score'], fields['stamp']))
+
+
 # ---------------------------------- REPORT ---------------------------------- #
 
 def create_Report(fields):
