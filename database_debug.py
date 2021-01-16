@@ -1,12 +1,21 @@
-from utility import *
+# ---------------------------------------------------------------------------- #
+#                                    IMPORTS                                   #
+# ---------------------------------------------------------------------------- #
+from utility import get_random_string
 from passlib.hash import pbkdf2_sha256 as hasher
 import datetime
+import random
 
 
+# ------------------------------- initDatabase ------------------------------- #
 def initDatabase(connection):
-    # Clears database then
-    # creates tables, constraints etc.
-    statement = """
+    # Clears database then creates tables, constraints etc. also adds an admin user
+
+    # get cursor
+    cursor = connection.cursor()
+
+    # create database
+    cursor.execute("""
     DROP TABLE IF EXISTS USERS CASCADE;
     DROP TABLE IF EXISTS ORDERS CASCADE;
     DROP TABLE IF EXISTS PRODUCTS CASCADE;
@@ -80,12 +89,17 @@ def initDatabase(connection):
         CONSTRAINT FK_CUSTOMER FOREIGN KEY (CREATOR) REFERENCES USERS(USER_ID) ON DELETE CASCADE,
         CONSTRAINT FK_ORDER_ID FOREIGN KEY (ORDER_ID) REFERENCES ORDERS(ORDER_ID) ON DELETE CASCADE
     );
-    """
-    cursor = connection.cursor()
-    cursor.execute(statement)
+    """)
+
+    # insert admin
+    cursor.execute("""INSERT INTO
+                        USERS (EMAIL, PASSPHRASE, REAL_NAME, BIRTHDAY_DATE, SEX, ADDRESS, IS_BANNED, IS_ADMIN, STAMP)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)""",
+                   ('admin', hasher.hash("admin"), ('admin', 'admin'), datetime.datetime(2000, 10, 10), 'M', "admin", False, True, datetime.datetime.now()))
     cursor.close()
 
 
+# ------------------------------- fillDatabase ------------------------------- #
 def fillDatabase(connection):
     # Fills the database with random values
 
@@ -102,12 +116,6 @@ def fillDatabase(connection):
     orders = []
     reports = []
     ratings = []
-
-    # # insert admin
-    # adminpw = hasher.hash("admin")
-    # cursor.execute("""INSERT INTO
-    #                     USERS (EMAIL, PASSPHRASE, REAL_NAME, BIRTHDAY_DATE, SEX, ADDRESS, IS_BANNED, IS_ADMIN, STAMP)
-    #                     VALUES (%s, %s, %s, %s, E, None, False, True, %s)""", ('admin',adminpw, datetime.datetime(2000, 10, 10), datetime.datetime.now()))
 
     # create users
     for user_id in range(1, total_users+1):
@@ -180,12 +188,12 @@ def fillDatabase(connection):
                        (customer, product_id, status, stamp))
 
         # create ratings
-        if(random.random() < 0.5):  # 50/50 chance to get rated
+        if(random.random() < 0.7):  # 70% chance to get rated
 
             # generate values
             creator = customer
             target = owner_of_product
-            score = int(random.random() * 10)
+            score = random.randint(1, 5)
             stamp = datetime.datetime.now()
 
             # save them to memory
@@ -195,8 +203,12 @@ def fillDatabase(connection):
             statement = """INSERT INTO
                             RATINGS (CREATOR, TARGET, SCORE, STAMP)
                             VALUES (%s, %s, %s, %s)"""
-            cursor.execute(statement,
-                           (creator, target, score, stamp))
+
+            # there may be collision so dont worry
+            try:
+                cursor.execute(statement, (creator, target, score, stamp))
+            except:
+                pass
 
     # create reports
     for dummy in range(1, total_reports+1):

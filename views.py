@@ -1,5 +1,6 @@
-# THIS FILE IS FOR ROUTING WEBSITE
-
+# ---------------------------------------------------------------------------- #
+#                                    IMPORTS                                   #
+# ---------------------------------------------------------------------------- #
 from flask import render_template, request, redirect, flash
 from flask_login import login_required, login_user, logout_user, current_user
 import database
@@ -7,19 +8,31 @@ import datetime
 from passlib.hash import pbkdf2_sha256 as hasher
 
 
+# ---------------------------------------------------------------------------- #
+#                                     VIEWS                                    #
+# ---------------------------------------------------------------------------- #
+
+
+# ------------------------------------- / ------------------------------------ #
 def home_page():
-    if (request.method == "GET"):
-        # first fetch the data from the database
-        products = database.fetch_Products_All()
-        for product in products:
-            product['merchant_rating'] = database.get_UserScore_ById(product['creator'])
-        # display it
-        return render_template("home.html", total_item=len(products), products=products, filtered=False)
-    else:
-        products = database.fetch_Products_ByForm(request.form)
-        return render_template("home.html", total_item=len(products), products=products, filtered=True)
+    try:
+        if (request.method == "GET"):
+            # first fetch the data from the database
+            products = database.fetch_Products_All()
+            for product in products:
+                product['merchant_rating'] = database.get_UserScore_ById(product['creator'])
+            # display it
+            return render_template("home.html", total_item=len(products), products=products, filtered=False)
+        else:
+            products = database.fetch_Products_ByForm(request.form)
+            return render_template("home.html", total_item=len(products), products=products, filtered=True)
+    except Exception as e:
+        flash(f"Something went wrong: {e}")
+    finally:
+        return redirect('/')
 
 
+# ---------------------------------- /login ---------------------------------- #
 def login_page():
     if (request.method == "GET"):
         return render_template("login.html")
@@ -41,6 +54,7 @@ def login_page():
             return render_template("login.html")
 
 
+# -------------------------------- /my-profile ------------------------------- #
 @login_required
 def my_profile_page():
     try:
@@ -60,6 +74,7 @@ def my_profile_page():
         return redirect('/')
 
 
+# ---------------------------------- /logout --------------------------------- #
 @login_required
 def logout_page():
     try:
@@ -71,6 +86,7 @@ def logout_page():
         return redirect('/')
 
 
+# ---------------------------------- /signup --------------------------------- #
 def signup_page():
     if (request.method == "GET"):
         return render_template("signup.html")
@@ -98,6 +114,7 @@ def signup_page():
             return redirect('/signup')
 
 
+# --------------------------------- /settings -------------------------------- #
 @login_required
 def settings_page():
     try:
@@ -116,6 +133,7 @@ def settings_page():
         return redirect('/my-profile')
 
 
+# -------------------------------- add-product ------------------------------- #
 @login_required
 def add_product_page():
     try:
@@ -140,6 +158,7 @@ def add_product_page():
         return redirect('/my-profile')
 
 
+# ------------------------------ /remove-product ----------------------------- #
 @login_required
 def remove_product_page():
     try:
@@ -151,6 +170,7 @@ def remove_product_page():
         return redirect('/my-profile')
 
 
+# -------------------------------- /toggle-ban ------------------------------- #
 @login_required
 def toggle_ban_page():
     if current_user.is_admin():
@@ -171,6 +191,7 @@ def toggle_ban_page():
     return redirect('/my-profile')
 
 
+# ------------------------------ /delete-account ----------------------------- #
 @login_required
 def delete_account_page():
     try:
@@ -182,6 +203,7 @@ def delete_account_page():
         return redirect('/my-profile')
 
 
+# -------------------------------- /rent-item -------------------------------- #
 @login_required
 def rent_item_page():
     product_id = request.args.get('productId')
@@ -197,6 +219,7 @@ def rent_item_page():
             return redirect("/")
 
 
+# ---------------------------------- /report --------------------------------- #
 @login_required
 def report_page():
     try:
@@ -217,6 +240,7 @@ def report_page():
         return redirect('/my-profile')
 
 
+# ----------------------------------- /rate ---------------------------------- #
 @login_required
 def rate_page():
     try:
@@ -243,6 +267,7 @@ def rate_page():
         return redirect('/my-profile')
 
 
+# ------------------------------- /close-order ------------------------------- #
 @login_required
 def close_order_page():
     try:
