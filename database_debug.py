@@ -55,7 +55,7 @@ def initDatabase(connection):
         DESCRIPTION VARCHAR(255) NOT NULL,
         CATEGORY VARCHAR(255) NOT NULL,
         PRICE NUMERIC NOT NULL CHECK(PRICE > 0),
-        DATE_INTERVAL DATE_INTERVALS NOT NULL,
+        DATE_INTERVAL DATE_INTERVALS NOT NULL CHECK((DATE_INTERVAL).BEGIN_DATE < (DATE_INTERVAL).END_DATE),
         STAMP DATE NOT NULL,
         CONSTRAINT FK_CREATOR FOREIGN KEY (CREATOR) REFERENCES USERS(USER_ID) ON DELETE CASCADE
     );
@@ -174,7 +174,7 @@ def fillDatabase(connection):
         customer = random.randint(1, total_users)   # randomly select a user (some may chosen zero or multiple times)
         while customer == owner_of_product:   # but owner can not order the hers product, make sure selecting each product only once
             customer = random.randint(1, total_users)
-        status = random.choice(["Aborted", "Rated", "Closed"])
+        status = random.choice(["Aborted", "Closed"])
         stamp = datetime.datetime.now()
 
         # save them to memory
