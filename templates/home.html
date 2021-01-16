@@ -52,7 +52,8 @@
                                 <div class="field">
                                     <div class="control has-icons-left">
                                         <input class="input is-rounded has-background-grey-dark has-text-white"
-                                            type="number" min="0" value="0" name="min-price" id="min-price">
+                                            type="number" min="0" {% if filtered %} value="{{form['min-price']}}" {%
+                                            endif %} name="min-price" id="min-price">
                                         <span class="icon is-left">
                                             <svg style="width:24px;height:24px" viewBox="0 0 24 24">
                                                 <path fill="white"
@@ -67,7 +68,8 @@
                                 <div class="field">
                                     <div class="control has-icons-left">
                                         <input class="input is-rounded has-background-grey-dark has-text-white"
-                                            type="number" min="0" value="" name="max-price" id="max-price">
+                                            type="number" min="0" {% if filtered %} value="{{form['max-price']}}" {%
+                                            endif %} name="max-price" id="max-price">
                                         <span class="icon is-left">
                                             <svg style="width:24px;height:24px" viewBox="0 0 24 24">
                                                 <path fill="white"
@@ -85,13 +87,15 @@
                         <div class="columns  box has-background-grey  m-0 p-0">
                             <div class="column">
                                 <label class="label has-text-white">Available&nbsp;from:</label>
-                                <input class="input is-rounded has-background-grey-dark has-text-white" type="date"
-                                    name="datepick-begin" id="datepick-begin">
+                                <input class="input is-rounded has-background-grey-dark has-text-white" type="date" {%
+                                    if filtered %} value="{{form['datepick-begin']}}" {% endif %} name="datepick-begin"
+                                    id="datepick-begin">
                             </div>
                             <div class="column">
                                 <label class="label has-text-white">Available&nbsp;to:</label>
-                                <input class="input is-rounded has-background-grey-dark has-text-white" type="date"
-                                    name="datepick-end" id="datepick-end">
+                                <input class="input is-rounded has-background-grey-dark has-text-white" type="date" {%
+                                    if filtered %} value="{{form['datepick-end']}}" {% endif %} name="datepick-end"
+                                    id="datepick-end">
                             </div>
                         </div>
                     </div>
@@ -101,7 +105,34 @@
                         <div class="columns box has-background-grey  m-0 p-0">
                             <div class="column">
                                 <label class="label has-text-white">Category:</label>
-                                <div class="select has-background-grey-dark is-fullwidth">
+                                <div class="is-flex is-justify-content-space-around">
+                                    <label class="checkbox has-text-white">
+                                        <input class="category-item" type="checkbox" name="c1" value="1" {% if filtered
+                                            and form['c1']=='1' %} checked {% endif %}>
+                                        1
+                                    </label>
+                                    <label class="checkbox has-text-white">
+                                        <input class="category-item" type="checkbox" name="c2" value="2" {% if filtered
+                                            and form['c2']=='2' %} checked {% endif %}>
+                                        2
+                                    </label>
+                                    <label class="checkbox has-text-white">
+                                        <input class="category-item" type="checkbox" name="c3" value="3" {% if filtered
+                                            and form['c3']=='3' %} checked {% endif %}>
+                                        3
+                                    </label>
+                                    <label class="checkbox has-text-white">
+                                        <input class="category-item" type="checkbox" name="c4" value="4" {% if filtered
+                                            and form['c4']=='4' %} checked {% endif %}>
+                                        4
+                                    </label>
+                                    <label class="checkbox has-text-white">
+                                        <input class="category-item" type="checkbox" name="c5" value="5" {% if filtered
+                                            and form['c5']=='5' %} checked {% endif %}>
+                                        5
+                                    </label>
+                                </div>
+                                <!-- <div class="select has-background-grey-dark is-fullwidth">
                                     <select class="has-background-grey-dark has-text-white" name="category"
                                         id="category">
                                         <option>All</option>
@@ -111,7 +142,7 @@
                                         <option>4</option>
                                         <option>5</option>
                                     </select>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
 
@@ -120,7 +151,8 @@
 
                 <div class="is-flex is-mobile is-justify-content-center">
                     <div class="mx-2">
-                        <button class="button is-link" type="reset" onclick="window.location.href='/'" id="clearBtn">Clear</button>
+                        <button class="button is-link" type="reset" onclick="window.location.href='/'"
+                            id="clearBtn">Clear</button>
                     </div>
                     <div class="mx-2">
                         <button class=" button is-success" type="submit">Submit</button>

@@ -25,10 +25,13 @@ def home_page():
             # display it
             return render_template("home.html", total_item=len(products), products=products, filtered=False)
         else:
+            print(request.form)
             products = database.fetch_Products_ByForm(request.form)
-            return render_template("home.html", total_item=len(products), products=products, filtered=True)
+            for product in products:
+                product['merchant_rating'] = database.get_UserScore_ById(product['creator'])
+            return render_template("home.html", total_item=len(products), products=products, filtered=True, form=request.form)
     except Exception as e:
-        flash(f"Something went wrong: {e}")
+        flash(f"Something went wrong: {e}", 'is-danger')
         return redirect('/')
 
 

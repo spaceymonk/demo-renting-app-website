@@ -125,18 +125,22 @@ def fetch_Products_ByForm(form):
         if begin_date > end_date:
             begin_date, end_date = end_date, begin_date
 
-        # generate statement
+        # generate statement so far
         statement = """SELECT * FROM products WHERE
+                        (status='Active') AND 
                         (price >= %s) AND (price <= %s) AND
                         ((date_interval).begin_date >= %s) AND ((date_interval).end_date <= %s)"""
 
         # handle category filter
-        category = form.get('category')
+        categories = list(filter(None, [form.get(f"c{x}") for x in settings.CATEGORIES]))
+        if len(categories) != 0:
+            statement += " AND ("
+            for i in range(0, len(categories)-1):
+                statement += f" category='{categories[i]}' OR "
+            statement += f" category='{categories[-1]}' )"
 
-        if category == 'All':
-            statement += 'ORDER BY stamp DESC;'
-        else:
-            statement += f' AND (category = \'{category}\') ORDER BY stamp DESC;'
+        # end statement
+        statement += ' ORDER BY stamp DESC;'
     except:
         raise Exception('Invalid filter!')
 
