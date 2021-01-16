@@ -6,6 +6,7 @@ from flask_login import login_required, login_user, logout_user, current_user
 import database
 import datetime
 from passlib.hash import pbkdf2_sha256 as hasher
+from psycopg2 import IntegrityError
 
 
 # ---------------------------------------------------------------------------- #
@@ -28,7 +29,6 @@ def home_page():
             return render_template("home.html", total_item=len(products), products=products, filtered=True)
     except Exception as e:
         flash(f"Something went wrong: {e}")
-    finally:
         return redirect('/')
 
 
@@ -133,7 +133,7 @@ def settings_page():
         return redirect('/my-profile')
 
 
-# -------------------------------- add-product ------------------------------- #
+# ------------------------------- /add-product ------------------------------- #
 @login_required
 def add_product_page():
     try:
@@ -206,6 +206,9 @@ def delete_account_page():
 # -------------------------------- /rent-item -------------------------------- #
 @login_required
 def rent_item_page():
+    if current_user.is_admin():
+        flash('Admins cannot rent!', 'is-danger')
+        return redirect('/')
     product_id = request.args.get('productId')
     if product_id is None:
         flash('Invalid product !', 'is-warning')
@@ -259,8 +262,12 @@ def rate_page():
             product = database.fetch_Product_ById(order['product_id'])
             fields['target'] = product['creator']
 
-        database.create_Rate(fields)
-        flash('User has been rated!', 'is-success')
+        try:
+            database.create_Rate(fields)
+            flash('User has been rated!', 'is-success')
+        except IntegrityError:
+            database.update_Rate(fields)
+            flash('Your rating has updated!', 'is-success')
     except Exception as e:
         flash(f"Something went wrong: {e}", 'is-danger')
     finally:

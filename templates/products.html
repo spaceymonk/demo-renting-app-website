@@ -40,12 +40,18 @@
                     <td>{{product.date_interval.begin_date.strftime('%Y/%m/%d')}}&nbsp;&mdash;&nbsp;{{product.date_interval.end_date.strftime('%Y/%m/%d')}}
                     </td>
                     <td class="has-text-right columns is-gapless">
+                        {% if product.status == 'Active' %}
                         <span class="column">
                             <form action="/remove-product" method="POST">
                                 <input type="hidden" name="product_id" value="{{product.product_id}}">
-                                <button type="submit" class="button is-danger">Remove</button>
+                                <button type="submit" class="button is-danger is-small">Remove</button>
                             </form>
                         </span>
+                        {% else %}
+                        <span class="column">
+                            <button type="submit" class="button is-danger is-small" disabled>Not active</button>
+                        </span>
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}

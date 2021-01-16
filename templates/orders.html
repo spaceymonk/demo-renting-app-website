@@ -26,7 +26,7 @@
 </style>
 
 <h4 class="subtitle has-text-centered">Order History</h4>
-<div class="table-container">
+<div class="table-container" style="height: 70vh;">
     <table class="table is-hoverable is-fullwidth is-striped is-scrollable">
         <thead>
             <tr class="has-background-primary has-text-white">
@@ -58,25 +58,26 @@
                 <td>{{order.metadata.customer}}</td>
                 <td>{{order.metadata.merchant}}</td>
                 <td>{{order.metadata.product_title}}<sub> Product ID:{{order.product_id}}</sub></td>
-                <td class="has-text-right columns is-gapless">
+                <td class="has-text-right is-flex is-justify-content-flex-end is-align-items-center"
+                    style="height: max-content;">
+
                     {% if order.status == "Active" %}
-                    <span class="column">
-                        <button class="button is-danger launchReportModal"
-                            onclick="$('.order').val('{{order.order_id}}'); $('#report-modal').addClass('is-active');">
-                            Report</button>
-                    </span>
-                    <span class="column">
-                        <form action="/close-order" method="POST">
-                            <input type="hidden" name="order_id" value="{{order.order_id}}">
-                            <button type="submit" class="button is-link">Close</button>
-                        </form>
-                    </span>
+                    <button class="button is-danger launchReportModal is-small"
+                        onclick="$('.order').val('{{order.order_id}}'); $('#report-modal').addClass('is-active');">
+                        Report</button>
+
+                    <form style="margin:auto;" action="/close-order" method="POST">
+                        <input type="hidden" name="order_id" value="{{order.order_id}}">
+                        <button type="submit" class="button is-link is-small">Close</button>
+                    </form>
+
+                    {% elif order.status == "Closed" %}
+                    <button class="button is-success launchRateModal is-small"
+                        onclick="$('.order').val('{{order.order_id}}'); $('#rate-modal').addClass('is-active');">
+                        Rate</button>
+
                     {% else %}
-                    <span class="column">
-                        <button class="button is-success launchRateModal"
-                            onclick="$('.order').val('{{order.order_id}}'); $('#rate-modal').addClass('is-active');">
-                            Rate</button>
-                    </span>
+                    <p>Not available</p>
                     {% endif %}
                 </td>
             </tr>
@@ -132,28 +133,27 @@
                         <input type="hidden" name="order_id" class="order">
                         <div class="content">
                             <h4 class="title has-text-black mb-1">Rate User</h4>
-                            <em>You can only rate the same user ONCE!</em>
                             <br>
                             <div class="is-flex is-justify-content-space-around my-5">
                                 <span>
                                     <label>1</label>
-                                    <input type="radio" id="r1" name="rate" value="1" selected>
+                                    <input type="radio" name="rate" value="1" selected>
                                 </span>
                                 <span>
                                     <label>2</label>
-                                    <input type="radio" id="r2" name="rate" value="2">
+                                    <input type="radio" name="rate" value="2">
                                 </span>
                                 <span>
                                     <label>3</label>
-                                    <input type="radio" id="r3" name="rate" value="3">
+                                    <input type="radio" name="rate" value="3">
                                 </span>
                                 <span>
                                     <label>4</label>
-                                    <input type="radio" id="r3" name="rate" value="4">
+                                    <input type="radio" name="rate" value="4">
                                 </span>
                                 <span>
                                     <label>5</label>
-                                    <input type="radio" id="r3" name="rate" value="5">
+                                    <input type="radio" name="rate" value="5">
                                 </span>
                             </div>
 
@@ -170,12 +170,6 @@
 </div>
 
 <script>
-    // $(".launchReportModal").click(function () {
-    //     $("#report-modal").addClass("is-active");
-    // });
-    // $(".launchRateModal").click(function () {
-    //     $("#rate-modal").addClass("is-active");
-    // });
     $(".closeBtn").click(function () {
         $(".modal").removeClass("is-active");
     });
