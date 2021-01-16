@@ -155,7 +155,7 @@
                     {% else %}
 
                     {% for product in products %}
-                    <tr class="launchModal" onclick="selectedProduct={{ product.product_id }}" style="cursor: pointer;">
+                    <tr class="launchModal" onclick="selectedProduct='{{product.product_id}}'" style="cursor: pointer;">
                         <td class="is-4 p-5" style="word-wrap: break-word; max-width: 10vw;">{{product.title}}</td>
                         <td class="is-4 p-5" style="word-wrap: break-word; max-width: 35vw;">{{product.description}}
                         </td>
