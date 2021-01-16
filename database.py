@@ -74,7 +74,7 @@ def generate_UserDict_ByTuple(user):
             'address': user[6],
             'is_banned': user[7],
             'is_admin': user[8],
-            'stamp': datetime.datetime.strptime(user[9], "%Y-%m-%d")
+            'stamp': user[9]
         }
     except:
         raise Exception('User object could not created!')
@@ -89,7 +89,7 @@ def generate_OrderDict_ByTuple(order):
             'customer': order[1],
             'product_id': order[2],
             'status': order[3],
-            'stamp': datetime.datetime.strptime(order[4], "%Y-%m-%d"),
+            'stamp': order[4]
         }
     except:
         raise Exception('Order object could not created!')
@@ -225,7 +225,7 @@ def get_UserScore_ById(user_id):
     # returns user's total rating by user_id
     with dbapi2.connect(settings.DSN) as connection:
         with connection.cursor() as cursor:
-            cursor.execute("SELECT SUM(score) FROM ratings WHERE target=%s;", (user_id,))
+            cursor.execute("SELECT AVG(score) FROM ratings WHERE target=%s;", (user_id,))
             data = cursor.fetchone()
             if data is not None:
                 return data[0]
@@ -332,6 +332,14 @@ def update_OrderStatus_ById(order_id, status):
                            (status, order_id))
 
 
+# ---------------------------------- RATING ---------------------------------- #
+def update_Rate(fields):
+    # update existing rating entry's score.
+    with dbapi2.connect(settings.DSN) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("UPDATE ratings SET score=%s, stamp=%s WHERE creator=%s AND target=%s;",
+                           (fields['score'], fields['stamp'], fields['creator'], fields['target']))
+
 # ---------------------------------------------------------------------------- #
 #                                DELETE METHODS                                #
 # ---------------------------------------------------------------------------- #
@@ -392,6 +400,10 @@ def create_Order(user_id, product_id):
 
     # get owner
     owner = fetch_User_ById(product['creator'])
+
+    # if owner itself then raise an error
+    if owner['user_id'] == user_id:
+        raise Exception("You cannot rent your own item!")
 
     order_id = None
 
