@@ -260,7 +260,7 @@
     });
     $("#rentBtn").click(function () {
         $(".modal").removeClass("is-active");
-        window.location.href = `{{url_for('rent-item')}}?productId=${selectedProduct}`;
+        window.location.href = `{{url_for('rent_item_page')}}?productId=${selectedProduct}`;
     });
 </script>
 

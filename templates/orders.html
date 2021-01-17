@@ -66,7 +66,7 @@
                         onclick="$('.order').val('{{order.order_id}}'); $('#report-modal').addClass('is-active');">
                         Report</button>
 
-                    <form style="margin:auto;" action="{{url_for('close-order')}}" method="POST">
+                    <form style="margin:auto;" action="{{url_for('close_order_page')}}" method="POST">
                         <input type="hidden" name="order_id" value="{{order.order_id}}">
                         <button type="submit" class="button is-link is-small">Close</button>
                     </form>
@@ -103,7 +103,7 @@
             <article class="media">
                 <div class="media-left"></div>
                 <div class="media-content">
-                    <form action="{{url_for('report')}}" method="POST">
+                    <form action="{{url_for('report_page')}}" method="POST">
                         <input type="hidden" name="order_id" class="order">
                         <div class="content">
                             <h4 class="title has-text-black mb-1">Create Report</h4>
@@ -129,7 +129,7 @@
             <article class="media">
                 <div class="media-left"></div>
                 <div class="media-content">
-                    <form action="{{url_for('rate')}}" method="POST">
+                    <form action="{{url_for('rate_page')}}" method="POST">
                         <input type="hidden" name="order_id" class="order">
                         <div class="content">
                             <h4 class="title has-text-black mb-1">Rate User</h4>

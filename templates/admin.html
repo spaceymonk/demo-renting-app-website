@@ -23,7 +23,7 @@
         </div>
         <div class="column ">
             <div class="is-flex is-justify-content-flex-end">
-                <div class="m-1"><a href="{{url_for('logout')}}" class="button is-link is-rounded">Log out</a></div>
+                <div class="m-1"><a href="{{url_for('logout_page')}}" class="button is-link is-rounded">Log out</a></div>
             </div>
         </div>
     </div>
@@ -48,7 +48,7 @@
                         {% if user.is_banned %}
                         <td><span>&#10004;</span> Banned</td>
                         <td class="has-text-right">
-                            <form action="{{url_for('toggle-ban')}}" method="POST">
+                            <form action="{{url_for('toggle_ban_page')}}" method="POST">
                                 <input type="hidden" name="email" value="{{user.email}}">
                                 <button type="submit" class="button is-success">Remove ban</button>
                             </form>
@@ -56,7 +56,7 @@
                         {% else %}
                         <td><span>&#10007;</span> Not banned</td>
                         <td class="has-text-right">
-                            <form action="{{url_for('toggle-ban')}}" method="POST">
+                            <form action="{{url_for('toggle_ban_page')}}" method="POST">
                                 <input type="hidden" name="email" value="{{user.email}}">
                                 <button type="submit" class="button is-danger">Ban user</button>
                             </form>
