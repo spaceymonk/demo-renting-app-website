@@ -22,6 +22,11 @@ def load_user(email):
     return settings.USERMAP.get(email)
 
 
+@app.errorhandler(Exception)
+def global_error_handler(e):
+    return f"Something terribly gone wrong! Here is some info: {e}"
+
+
 # ---------------------------------------------------------------------------- #
 #                                  ENTRY POINT                                 #
 # ---------------------------------------------------------------------------- #
@@ -29,8 +34,8 @@ if __name__ == '__main__':
 
     # for faster debugging fill database with garbage
     # with dbapi2.connect(settings.DSN) as connection:
-        # database_debug.initDatabase(connection)
-        # database_debug.fillDatabase(connection)
+    # database_debug.initDatabase(connection)
+    # database_debug.fillDatabase(connection)
 
     login_manager.init_app(app)  # initialize login manager
     login_manager.login_view = "login_page"  # set login page

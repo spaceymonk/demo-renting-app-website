@@ -16,23 +16,18 @@ from psycopg2 import IntegrityError
 
 # ------------------------------------- / ------------------------------------ #
 def home_page():
-    try:
-        if (request.method == "GET"):
-            # first fetch the data from the database
-            products = database.fetch_Products_All()
-            for product in products:
-                product['merchant_rating'] = database.get_UserScore_ById(product['creator'])
-            # display it
-            return render_template("home.html", total_item=len(products), products=products, filtered=False)
-        else:
-            print(request.form)
-            products = database.fetch_Products_ByForm(request.form)
-            for product in products:
-                product['merchant_rating'] = database.get_UserScore_ById(product['creator'])
-            return render_template("home.html", total_item=len(products), products=products, filtered=True, form=request.form)
-    except Exception as e:
-        flash(f"Something went wrong: {e}", 'is-danger')
-        return redirect('/')
+    if (request.method == "GET"):
+        # first fetch the data from the database
+        products = database.fetch_Products_All()
+        for product in products:
+            product['merchant_rating'] = database.get_UserScore_ById(product['creator'])
+        # display it
+        return render_template("home.html", total_item=len(products), products=products, filtered=False)
+    else:
+        products = database.fetch_Products_ByForm(request.form)
+        for product in products:
+            product['merchant_rating'] = database.get_UserScore_ById(product['creator'])
+        return render_template("home.html", total_item=len(products), products=products, filtered=True, form=request.form)
 
 
 # ---------------------------------- /login ---------------------------------- #
@@ -153,6 +148,10 @@ def add_product_page():
             },
             'stamp': datetime.datetime.now(),
         }
+        if request.files:
+            uploaded_file = request.files["image-name"].read()
+            fields['image'] = uploaded_file
+
         database.create_Product(fields)
         flash("Product Added!", 'is-success')
     except Exception as e:

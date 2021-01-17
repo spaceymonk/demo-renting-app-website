@@ -7,6 +7,7 @@ import psycopg2 as dbapi2
 import datetime
 import settings
 from user import User
+import base64
 
 
 # ---------------------------------------------------------------------------- #
@@ -39,20 +40,24 @@ def validate_user(email, passphrase):
 def generate_ProductDict_ByTuple(product):
     # returns a dictionary that contains product fields
     try:
-        return {
-            'product_id': product[0],
-            'creator': product[1],
-            'status': product[2],
-            'title': product[3],
-            'description': product[4],
-            'category': product[5],
-            'price': product[6],
-            'date_interval': {
-                'begin_date': datetime.datetime.strptime(product[7].split(',')[0], "(%Y-%m-%d"),
-                'end_date': datetime.datetime.strptime(product[7].split(',')[1], "%Y-%m-%d)"),
-            },
-            'stamp': product[8],
-        }
+        retVal = {
+                'product_id': product[0],
+                'creator': product[1],
+                'status': product[2],
+                'title': product[3],
+                'description': product[4],
+                'category': product[5],
+                'price': product[6],
+                'date_interval': {
+                    'begin_date': datetime.datetime.strptime(product[7].split(',')[0], "(%Y-%m-%d"),
+                    'end_date': datetime.datetime.strptime(product[7].split(',')[1], "%Y-%m-%d)"),
+                },
+                'image': None,
+                'stamp': product[9],
+            }
+        if product[8] is not None:
+            retVal['image'] = base64.b64encode(product[8]).decode('utf-8')
+        return retVal
     except:
         raise Exception('Product object could not created!')
 
@@ -385,10 +390,16 @@ def create_Product(fields):
     # add a new product entry to database.
     with dbapi2.connect(settings.DSN) as connection:
         with connection.cursor() as cursor:
-            cursor.execute("""INSERT INTO
+            if fields.get('image') is not None:
+                cursor.execute("""INSERT INTO
+                        products (CREATOR, STATUS, TITLE, DESCRIPTION, CATEGORY, PRICE, DATE_INTERVAL, IMAGE, STAMP)
+                            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);""",
+                               (fields['creator'], fields['status'], fields['title'], fields['description'], fields['category'], fields['price'], (fields['date_interval']['begin_date'],  fields['date_interval']['end_date']), fields['image'], fields['stamp']))
+            else:
+                cursor.execute("""INSERT INTO
                         products (CREATOR, STATUS, TITLE, DESCRIPTION, CATEGORY, PRICE, DATE_INTERVAL, STAMP)
                             VALUES (%s, %s, %s, %s, %s, %s, %s, %s);""",
-                           (fields['creator'], fields['status'], fields['title'], fields['description'], fields['category'], fields['price'], (fields['date_interval']['begin_date'],  fields['date_interval']['end_date']), fields['stamp']))
+                               (fields['creator'], fields['status'], fields['title'], fields['description'], fields['category'], fields['price'], (fields['date_interval']['begin_date'],  fields['date_interval']['end_date']), fields['stamp']))
 
 
 # ---------------------------------- ORDERS ---------------------------------- #
