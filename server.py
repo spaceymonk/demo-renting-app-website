@@ -32,7 +32,7 @@ def global_error_handler(e):
 # ---------------------------------------------------------------------------- #
 if __name__ == '__main__':
 
-    with dbapi2.connect(settings.DSN) as connection:
+    with dbapi2.connect(settings.DSN, sslmode='require') as connection:
         database_debug.initDatabase(connection)
     #   database_debug.fillDatabase(connection) # for faster debugging fill database with garbage
 

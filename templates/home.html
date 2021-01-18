@@ -151,7 +151,7 @@
 
                 <div class="is-flex is-mobile is-justify-content-center">
                     <div class="mx-2">
-                        <button class="button is-link" type="reset" onclick="window.location.href='/'"
+                        <button class="button is-link" type="reset"
                             id="clearBtn">Clear</button>
                     </div>
                     <div class="mx-2">
@@ -249,6 +249,9 @@
     });
 
     let selectedProduct;
+    $("#clearBtn").click(function () {
+        window.location.href= "{{url_for('home_page')}}"
+    });
     $(".launchModal").click(function () {
         $(".modal").addClass("is-active");
     });

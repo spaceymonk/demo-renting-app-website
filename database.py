@@ -18,7 +18,7 @@ import base64
 def validate_user(email, passphrase):
     # Checks whether given email and passphrase is in the database
     snapshot = []
-    with dbapi2.connect(settings.DSN) as connection:
+    with dbapi2.connect(settings.DSN, sslmode='require') as connection:
         with connection.cursor() as cursor:
             cursor.execute("SELECT is_banned, is_admin, user_id, passphrase FROM users WHERE email=%s;", (email,))
             snapshot = cursor.fetchone()
@@ -150,7 +150,7 @@ def fetch_Products_ByForm(form):
         raise Exception('Invalid filter!')
 
     products = []
-    with dbapi2.connect(settings.DSN) as connection:
+    with dbapi2.connect(settings.DSN, sslmode='require') as connection:
         with connection.cursor() as cursor:
             cursor.execute(statement, (min_price, max_price, begin_date, end_date))
             for product in cursor.fetchall():
@@ -162,7 +162,7 @@ def fetch_Products_ByForm(form):
 def fetch_Products_OfUser_ById(id):
     # gets all products from the database which belongs to a certain user
     products = []
-    with dbapi2.connect(settings.DSN) as connection:
+    with dbapi2.connect(settings.DSN, sslmode='require') as connection:
         with connection.cursor() as cursor:
             cursor.execute("SELECT * FROM products WHERE creator=%s;", (id,))
             for product in cursor.fetchall():
@@ -173,7 +173,7 @@ def fetch_Products_OfUser_ById(id):
 def fetch_Products_All():
     # gets all products from the database which are active
     products = []
-    with dbapi2.connect(settings.DSN) as connection:
+    with dbapi2.connect(settings.DSN, sslmode='require') as connection:
         with connection.cursor() as cursor:
             cursor.execute("SELECT * FROM products WHERE status='Active';")
             for product in cursor.fetchall():
@@ -184,7 +184,7 @@ def fetch_Products_All():
 def fetch_Product_ById(product_id):
     # returns product with the same product_id
 
-    with dbapi2.connect(settings.DSN) as connection:
+    with dbapi2.connect(settings.DSN, sslmode='require') as connection:
         with connection.cursor() as cursor:
             cursor.execute("SELECT * FROM products WHERE product_id=%s;", (product_id,))
             data = cursor.fetchone()
@@ -197,7 +197,7 @@ def fetch_Product_ById(product_id):
 # ----------------------------------- USERS ---------------------------------- #
 def fetch_User_ByEmail(email):
     # returns user object where email matches
-    with dbapi2.connect(settings.DSN) as connection:
+    with dbapi2.connect(settings.DSN, sslmode='require') as connection:
         with connection.cursor() as cursor:
             cursor.execute("SELECT * FROM users WHERE email=%s;", (email,))
             data = cursor.fetchone()
@@ -209,7 +209,7 @@ def fetch_User_ByEmail(email):
 
 def fetch_User_ById(id):
     # returns user object where id matches
-    with dbapi2.connect(settings.DSN) as connection:
+    with dbapi2.connect(settings.DSN, sslmode='require') as connection:
         with connection.cursor() as cursor:
             cursor.execute("SELECT * FROM users WHERE user_id=%s;", (id,))
             data = cursor.fetchone()
@@ -222,7 +222,7 @@ def fetch_User_ById(id):
 def fetch_Users_All():
     # returns all users ordered by stamp
     users = []
-    with dbapi2.connect(settings.DSN) as connection:
+    with dbapi2.connect(settings.DSN, sslmode='require') as connection:
         with connection.cursor() as cursor:
             cursor.execute("SELECT * FROM users ORDER BY stamp DESC;")
             for user in cursor.fetchall():
@@ -232,7 +232,7 @@ def fetch_Users_All():
 
 def get_UserScore_ById(user_id):
     # returns user's total rating by user_id
-    with dbapi2.connect(settings.DSN) as connection:
+    with dbapi2.connect(settings.DSN, sslmode='require') as connection:
         with connection.cursor() as cursor:
             cursor.execute("SELECT AVG(score) FROM ratings WHERE target=%s;", (user_id,))
             data = cursor.fetchone()
@@ -245,7 +245,7 @@ def get_UserScore_ById(user_id):
 # ---------------------------------- ORDERS ---------------------------------- #
 def fetch_Order_ById(order_id):
     # returns order object where order_id matches with the argument
-    with dbapi2.connect(settings.DSN) as connection:
+    with dbapi2.connect(settings.DSN, sslmode='require') as connection:
         with connection.cursor() as cursor:
             cursor.execute("SELECT * FROM orders WHERE order_id=%s;", (order_id, ))
             data = cursor.fetchone()
@@ -258,7 +258,7 @@ def fetch_Order_ById(order_id):
 def fetch_Orders_OfUser_ById(user_id):
     # returns all orders that user has involved
     orders = []
-    with dbapi2.connect(settings.DSN) as connection:
+    with dbapi2.connect(settings.DSN, sslmode='require') as connection:
         with connection.cursor() as cursor:
             cursor.execute("SELECT * FROM orders WHERE customer=%s ORDER BY stamp DESC;", (user_id, ))
             for order in cursor.fetchall():
@@ -275,7 +275,7 @@ def fetch_Orders_OfUser_ById(user_id):
 def fetch_OrderMetadata_ById(order_id):
     # returns a dictionary that contains: product title, merchant&customer emails and report, if exists.
     metadata = {}
-    with dbapi2.connect(settings.DSN) as connection:
+    with dbapi2.connect(settings.DSN, sslmode='require') as connection:
         with connection.cursor() as cursor:
 
             # below stmnt fetches product title and product owner
@@ -310,14 +310,14 @@ def fetch_OrderMetadata_ById(order_id):
 # ----------------------------------- USERS ---------------------------------- #
 def update_UserBan_ByEmail(email, banned):
     # banns or unbanns the user by given email
-    with dbapi2.connect(settings.DSN) as connection:
+    with dbapi2.connect(settings.DSN, sslmode='require') as connection:
         with connection.cursor() as cursor:
             cursor.execute("UPDATE users SET is_banned = %s WHERE email = %s", (banned, email))
 
 
 def update_User_ByEmail(email, fields):
     # update user fields
-    with dbapi2.connect(settings.DSN) as connection:
+    with dbapi2.connect(settings.DSN, sslmode='require') as connection:
         with connection.cursor() as cursor:
             cursor.execute("UPDATE users SET passphrase=%s, real_name=%s, sex=%s, address=%s WHERE email=%s",
                            (fields['passphrase'], (fields['first_name'], fields['last_name']), fields['sex'], fields['address'], email))
@@ -326,7 +326,7 @@ def update_User_ByEmail(email, fields):
 # ---------------------------------- PRODUCT --------------------------------- #
 def update_ProductStatus_ById(product_id, status):
     # set product's status
-    with dbapi2.connect(settings.DSN) as connection:
+    with dbapi2.connect(settings.DSN, sslmode='require') as connection:
         with connection.cursor() as cursor:
             cursor.execute("UPDATE products SET status=%s WHERE product_id=%s",
                            (status, product_id))
@@ -335,7 +335,7 @@ def update_ProductStatus_ById(product_id, status):
 # ----------------------------------- ORDER ---------------------------------- #
 def update_OrderStatus_ById(order_id, status):
     # set order's status
-    with dbapi2.connect(settings.DSN) as connection:
+    with dbapi2.connect(settings.DSN, sslmode='require') as connection:
         with connection.cursor() as cursor:
             cursor.execute("UPDATE orders SET status=%s WHERE order_id=%s",
                            (status, order_id))
@@ -344,7 +344,7 @@ def update_OrderStatus_ById(order_id, status):
 # ---------------------------------- RATING ---------------------------------- #
 def update_Rate(fields):
     # update existing rating entry's score.
-    with dbapi2.connect(settings.DSN) as connection:
+    with dbapi2.connect(settings.DSN, sslmode='require') as connection:
         with connection.cursor() as cursor:
             cursor.execute("UPDATE ratings SET score=%s, stamp=%s WHERE creator=%s AND target=%s;",
                            (fields['score'], fields['stamp'], fields['creator'], fields['target']))
@@ -357,14 +357,14 @@ def update_Rate(fields):
 # ----------------------------------- USER ----------------------------------- #
 def delete_User_ByEmail(email):
     # remove user from database and all its products, orders etc.
-    with dbapi2.connect(settings.DSN) as connection:
+    with dbapi2.connect(settings.DSN, sslmode='require') as connection:
         with connection.cursor() as cursor:
             cursor.execute("DELETE FROM users WHERE email = %s", (email,))
 
 
 def delete_Product_ById(product_id):
     # remove product from database and all its orders
-    with dbapi2.connect(settings.DSN) as connection:
+    with dbapi2.connect(settings.DSN, sslmode='require') as connection:
         with connection.cursor() as cursor:
             cursor.execute("DELETE FROM products WHERE product_id = %s", (product_id,))
 
@@ -377,7 +377,7 @@ def delete_Product_ById(product_id):
 # ----------------------------------- USERS ---------------------------------- #
 def create_User(fields):
     # add a new user entry to database.
-    with dbapi2.connect(settings.DSN) as connection:
+    with dbapi2.connect(settings.DSN, sslmode='require') as connection:
         with connection.cursor() as cursor:
             cursor.execute("""INSERT INTO
                         users (EMAIL, PASSPHRASE, REAL_NAME, BIRTHDAY_DATE, SEX, ADDRESS, IS_BANNED, IS_ADMIN, STAMP)
@@ -388,7 +388,7 @@ def create_User(fields):
 # --------------------------------- PRODUCTS --------------------------------- #
 def create_Product(fields):
     # add a new product entry to database.
-    with dbapi2.connect(settings.DSN) as connection:
+    with dbapi2.connect(settings.DSN, sslmode='require') as connection:
         with connection.cursor() as cursor:
             if fields.get('image') is not None:
                 cursor.execute("""INSERT INTO
@@ -423,7 +423,7 @@ def create_Order(user_id, product_id):
     order_id = None
 
     # create order
-    with dbapi2.connect(settings.DSN) as connection:
+    with dbapi2.connect(settings.DSN, sslmode='require') as connection:
         with connection.cursor() as cursor:
             cursor.execute("""INSERT INTO
                                 orders (CUSTOMER, PRODUCT_ID, STATUS, STAMP)
@@ -440,7 +440,7 @@ def create_Order(user_id, product_id):
 # ---------------------------------- RATING ---------------------------------- #
 def create_Rate(fields):
     # add a new rating entry to database.
-    with dbapi2.connect(settings.DSN) as connection:
+    with dbapi2.connect(settings.DSN, sslmode='require') as connection:
         with connection.cursor() as cursor:
             cursor.execute("""INSERT INTO
                         ratings (CREATOR, TARGET, SCORE, STAMP)
@@ -451,7 +451,7 @@ def create_Rate(fields):
 # ---------------------------------- REPORT ---------------------------------- #
 def create_Report(fields):
     # add a new report entry to database.
-    with dbapi2.connect(settings.DSN) as connection:
+    with dbapi2.connect(settings.DSN, sslmode='require') as connection:
         with connection.cursor() as cursor:
             cursor.execute("""INSERT INTO
                         reports (CREATOR, ORDER_ID, PROBLEM, STAMP)
