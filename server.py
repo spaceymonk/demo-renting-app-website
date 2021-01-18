@@ -22,9 +22,9 @@ def load_user(email):
     return settings.USERMAP.get(email)
 
 
-@app.errorhandler(Exception)
-def global_error_handler(e):
-    return f"Something terribly gone wrong! Here is some info: {e}"
+# @app.errorhandler(Exception)
+# def global_error_handler(e):
+#     return f"Something terribly gone wrong! Here is some info: {e}"
 
 
 # ---------------------------------------------------------------------------- #
