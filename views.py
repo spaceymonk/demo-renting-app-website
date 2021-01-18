@@ -16,7 +16,6 @@ from psycopg2 import IntegrityError
 
 # ------------------------------------- / ------------------------------------ #
 def home_page():
-    return 'wtf bro'
     if (request.method == "GET"):
         # first fetch the data from the database
         products = database.fetch_Products_All()
