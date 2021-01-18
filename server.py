@@ -57,4 +57,4 @@ app.add_url_rule("/close-order", view_func=views.close_order_page, methods=["POS
 
 if __name__ == "__main__":
     # run application
-    app.run()
+    app.run(host='0.0.0.0')
