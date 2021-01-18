@@ -13,6 +13,7 @@ import database
 # ---------------------------------------------------------------------------- #
 #                                     INIT                                     #
 # ---------------------------------------------------------------------------- #
+print('program started')
 app = Flask(__name__)
 login_manager = LoginManager()
 
@@ -30,11 +31,12 @@ def global_error_handler(e):
 # ---------------------------------------------------------------------------- #
 #                                  ENTRY POINT                                 #
 # ---------------------------------------------------------------------------- #
-
+print('init db')
 with dbapi2.connect(settings.DSN, sslmode='require') as connection:
     database_debug.initDatabase(connection)
 #   database_debug.fillDatabase(connection) # for faster debugging fill database with garbage
 
+print ('init rules')
 login_manager.init_app(app)  # initialize login manager
 login_manager.login_view = "login_page"  # set login page
 login_manager.login_message_category = "is-info"    # set login message category
@@ -57,4 +59,5 @@ app.add_url_rule("/rate", view_func=views.rate_page, methods=["POST"])
 app.add_url_rule("/close-order", view_func=views.close_order_page, methods=["POST"])
 
 # run application
+print('run the app')
 app.run()
