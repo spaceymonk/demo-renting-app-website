@@ -58,4 +58,4 @@ if __name__ == '__main__':
     app.add_url_rule("/close-order", view_func=views.close_order_page, methods=["POST"])
 
     # run application
-    app.run(host='0.0.0.0', port=settings.PORT, debug=settings.DEBUG)
+    app.run()
