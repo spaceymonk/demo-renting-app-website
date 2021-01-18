@@ -24,7 +24,7 @@ def load_user(email):
 
 @app.errorhandler(Exception)
 def global_error_handler(e):
-    return f"Something terribly gone wrong! Here is some info: {e}"
+    return f"Something terribly gone wrong! Here is some info: {e}\nRequest Object: {request}"
 
 
 # ---------------------------------------------------------------------------- #
@@ -58,4 +58,4 @@ if __name__ == '__main__':
     app.add_url_rule("/close-order", view_func=views.close_order_page, methods=["POST"])
 
     # run application
-    app.run(host='0.0.0.0', debug=False, port=os.environ.get('PORT', 80))
+    app.run()
