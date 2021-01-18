@@ -58,6 +58,7 @@ app.add_url_rule("/report", view_func=views.report_page, methods=["POST"])
 app.add_url_rule("/rate", view_func=views.rate_page, methods=["POST"])
 app.add_url_rule("/close-order", view_func=views.close_order_page, methods=["POST"])
 
-# run application
-print('run the app')
-app.run()
+if __name__ == "__main__":
+    # run application
+    print('run the app')
+    app.run()
