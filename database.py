@@ -310,8 +310,6 @@ def fetch_OrderMetadata_ById(order_id):
 # ----------------------------------- USERS ---------------------------------- #
 def update_UserBan_ByEmail(email, banned):
     # banns or unbanns the user by given email
-    if current_user.email == email and current_user.is_admin():
-        raise Exception('Admin cannot be banned!')
     with dbapi2.connect(settings.DSN, sslmode='require') as connection:
         with connection.cursor() as cursor:
             cursor.execute("UPDATE users SET is_banned = %s WHERE email = %s", (banned, email))
