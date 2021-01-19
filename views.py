@@ -178,6 +178,9 @@ def toggle_ban_page():
     if current_user.is_admin():
         email = request.form.get('email')
         user = database.fetch_User_ByEmail(email)
+        if user['is_admin']:
+            flash('Admins cannot be touched!', 'is-danger')
+            return redirect('/my-profile')
         if user['is_banned']:
             try:
                 database.update_UserBan_ByEmail(email, False)
