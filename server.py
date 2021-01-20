@@ -32,7 +32,7 @@ def global_error_handler(e):
 # ---------------------------------------------------------------------------- #
 with dbapi2.connect(settings.DSN, sslmode='require') as connection:
     database_debug.initDatabase(connection)
-#   database_debug.fillDatabase(connection) # for faster debugging fill database with garbage
+    database_debug.fillDatabase(connection) # for faster debugging fill database with garbage
 
 login_manager.init_app(app)  # initialize login manager
 login_manager.login_view = "login_page"  # set login page
